@@ -16,6 +16,7 @@ public class PhysicsService implements Runnable {
 	private class BodyCreationRequest {
 		public BodyDef bodyDef;
 		public Callback callback;
+		public FixtureDef fixtureDef;
 	}
 
 	public static final String SERVICE_NAME = "PhysicsService";
@@ -49,6 +50,7 @@ public class PhysicsService implements Runnable {
 				while(!bodyCreationQueue.isEmpty()) {
 					BodyCreationRequest request = bodyCreationQueue.poll();
 					Body newBody = world.createBody(request.bodyDef);
+					newBody.createFixture(request.fixtureDef);
 					request.callback.callback(newBody);
 				}
 				world.step(0.016666666f, VELOCITY_ITERATIONS,
@@ -78,6 +80,7 @@ public class PhysicsService implements Runnable {
 		BodyCreationRequest entry = new BodyCreationRequest();
 		entry.bodyDef = bodyDef;
 		entry.callback =  callback;
+		entry.fixtureDef = fixtureDef;
 		bodyCreationQueue.push(entry);
 	}
 }
