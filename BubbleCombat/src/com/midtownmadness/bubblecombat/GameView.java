@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.lunarlander;
+package com.midtownmadness.bubblecombat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,21 +25,27 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+
+import android.view.View.OnTouchListener;
 
 @SuppressLint("WrongCall")
-class LunarView extends SurfaceView implements SurfaceHolder.Callback {
+class GameView extends SurfaceView implements SurfaceHolder.Callback,
+		OnTouchListener {
 	private SurfaceHolder holder;
 
 	private DrawThread drawThread;
 
 	private boolean surfaceCreated;
 
-	private static final String TAG = LunarView.class.getSimpleName();
+	private static final String TAG = GameView.class.getSimpleName();
 
-	public LunarView(Context context, AttributeSet attrs) {
+	public GameView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		setOnTouchListener(this);
 
 		holder = getHolder();
 		holder.addCallback(this);
@@ -87,10 +93,23 @@ class LunarView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			if (surfaceCreated) {
 				Canvas canvas = holder.lockCanvas();
-				LunarView.this.onDraw(canvas);
+				GameView.this.onDraw(canvas);
 				holder.unlockCanvasAndPost(canvas);
 			}
 			handler.postDelayed(this, 16);
 		}
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			break;
+		case MotionEvent.ACTION_MOVE:
+			break;
+		case MotionEvent.ACTION_UP:
+			break;
+		}
+		return false;
 	}
 }

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.android.lunarlander;
+package com.midtownmadness.bubblecombat;
+
+import com.example.android.lunarlander.R;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -32,10 +34,10 @@ import android.widget.TextView;
  * <li>handling onPause() in an animation
  * </ul>
  */
-public class LunarLander extends Activity {
+public class GameActivity extends Activity {
 
 	/** A handle to the View in which the game is running. */
-	private LunarView mLunarView;
+	private GameView mLunarView;
 
 	/**
 	 * Invoked during init to give the Activity a chance to set up its Menu.
@@ -52,7 +54,7 @@ public class LunarLander extends Activity {
 		setContentView(R.layout.lunar_layout);
 
 		// get handles to the LunarView from XML, and its LunarThread
-		mLunarView = (LunarView) findViewById(R.id.lunar);
+		mLunarView = (GameView) findViewById(R.id.lunar);
 
 		// give the LunarView a handle to the TextView used for messages
 	}
