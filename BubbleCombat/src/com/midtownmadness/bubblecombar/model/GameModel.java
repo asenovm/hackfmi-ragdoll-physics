@@ -12,4 +12,9 @@ public class GameModel {
 		return gameName;
 	}
 
+	@Override
+	public String toString() {
+		return "GameModel [gameName=" + gameName + "]";
+	}
+
 }

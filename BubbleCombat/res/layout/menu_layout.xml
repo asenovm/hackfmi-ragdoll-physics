@@ -28,6 +28,12 @@
             android:text="@string/menu_quit" />
     </RelativeLayout>
 
+    <View
+        android:layout_width="@dimen/width_shadow"
+        android:layout_height="match_parent"
+        android:background="@drawable/drop_shadow" >
+    </View>
+
     <RelativeLayout
         android:id="@+id/center_container"
         android:layout_width="0dp"
@@ -38,7 +44,21 @@
             android:id="@+id/games_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp" />
+            android:divider="@null"
+            android:drawSelectorOnTop="false"
+            android:listSelector="@drawable/menu_list_selector" />
+
+        <TextView
+            android:id="@+id/menu_list_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/padding_menu_item"
+            android:text="@string/menu_empty_view_text"
+            android:textColor="@color/menu_text_disabled"
+            android:textSize="@dimen/text_size_menu_item"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </merge>

@@ -2,7 +2,10 @@
 <resources>
 
     <color name="dark_gray">#757575</color>
+    <color name="shadow_dark_gray">#383838</color>
     <color name="light_gray">#cccccc</color>
     <color name="menu_button_blue">#6abed8</color>
+    <color name="menu_selector_blue">#c5eaf8</color>
+    <color name="menu_text_disabled">#ff4444</color>
 
 </resources>
