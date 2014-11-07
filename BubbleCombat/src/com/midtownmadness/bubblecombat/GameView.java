@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -55,6 +56,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.RED);
+//		Log.d(TAG, "drawed");
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -63,9 +65,6 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		surfaceCreated = true;
-		Canvas canvas = holder.lockCanvas();
-		onDraw(canvas);
-		holder.unlockCanvasAndPost(canvas);
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
