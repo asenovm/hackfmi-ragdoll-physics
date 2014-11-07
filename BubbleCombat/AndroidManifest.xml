@@ -33,6 +33,7 @@
         android:targetSdkVersion="19" />
 
     <application
+        android:name="com.midtownmadness.bubblecombat.GlobalContext"
         android:allowBackup="false"
         android:icon="@drawable/app_lunar_lander"
         android:label="@string/app_name" >

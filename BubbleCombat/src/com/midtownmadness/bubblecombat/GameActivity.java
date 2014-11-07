@@ -16,6 +16,8 @@
 
 package com.midtownmadness.bubblecombat;
 
+import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -28,7 +30,7 @@ import android.os.Bundle;
  * <li>handling onPause() in an animation
  * </ul>
  */
-public class GameActivity extends Activity {
+public class GameActivity extends BaseActivity {
 
 	/** A handle to the View in which the game is running. */
 	private GameView mLunarView;
@@ -44,6 +46,13 @@ public class GameActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		
+		//Multiplayer reference example
+		MultiplayManager manager = (MultiplayManager) getSystemService(MultiplayManager.SERVICE_NAME);
+		if (manager == null){
+			throw new RuntimeException();
+		}
+		
 		// tell system to use the layout defined in our XML file
 		setContentView(R.layout.lunar_layout);
 
