@@ -16,14 +16,8 @@
 
 package com.midtownmadness.bubblecombat;
 
-import com.example.android.lunarlander.R;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 /**
  * This is a simple LunarLander activity that houses a single LunarView. It
