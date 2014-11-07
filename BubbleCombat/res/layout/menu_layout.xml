@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:weightSum="3" >
+
+    <RelativeLayout
+        android:id="@+id/left_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/dark_gray" >
+
+        <Button
+            android:id="@+id/host_button"
+            style="@style/menu_button_style"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/margin_vertical_menu_button"
+            android:text="@string/menu_host" />
+
+        <Button
+            android:id="@+id/quit_button"
+            style="@style/menu_button_style"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/margin_vertical_menu_button"
+            android:text="@string/menu_quit" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/center_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2" >
+    </RelativeLayout>
+
+</merge>
