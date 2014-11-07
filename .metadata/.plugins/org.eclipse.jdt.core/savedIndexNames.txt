@@ -1,3 +1,0 @@
-INDEX VERSION 1.126+/home/martin/workspace/hackfmi-ragdoll-physics/.metadata/.plugins/org.eclipse.jdt.core
-502539309.index
-170255176.index
