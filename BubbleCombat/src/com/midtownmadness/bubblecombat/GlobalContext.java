@@ -13,7 +13,7 @@ public class GlobalContext extends Application {
 	public Object getSystemService(String name) {
 		if (MultiplayManager.SERVICE_NAME.equals(name)) {
 			if (multiplayManager == null) {
-				multiplayManager = new MultiplayManager();
+				multiplayManager = new MultiplayManager(this);
 			}
 			return multiplayManager;
 		} else if (PhysicsService.SERVICE_NAME.equals(name)) {
