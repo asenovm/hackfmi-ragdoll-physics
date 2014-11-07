@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.midtownmadness.bubblecombar.model.GameModel;
 import com.midtownmadness.bubblecombar.model.GamesAdapter;
+import com.midtownmadness.bubblecombar.model.MockGamesAdapter;
 import com.midtownmadness.bubblecombat.R;
 
 public class MenuView extends LinearLayout {
@@ -35,7 +35,9 @@ public class MenuView extends LinearLayout {
 
 	public MenuView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		LayoutInflater.from(context).inflate(R.layout.menu_layout, this);
+		final LayoutInflater inflater = LayoutInflater.from(context);
+
+		inflater.inflate(R.layout.menu_layout, this);
 		setBackgroundResource(R.color.light_gray);
 
 		final View quitButton = findViewById(R.id.quit_button);
@@ -45,11 +47,12 @@ public class MenuView extends LinearLayout {
 		hostButton.setOnClickListener(new HostOnClickListener());
 
 		final ListView gamesListView = (ListView) findViewById(R.id.games_list);
-		final GamesAdapter adapter = new GamesAdapter(context,
-				R.id.game_view_text, new GameModel[] { new GameModel() });
-		adapter.add(new GameModel());
-		adapter.add(new GameModel());
-		gamesListView.setAdapter(adapter);
+
+		gamesListView.addHeaderView(inflater.inflate(R.layout.menu_title_view,
+				gamesListView, false));
+
+		final GamesAdapter mockAdapter = new MockGamesAdapter(context);
+		gamesListView.setAdapter(mockAdapter);
 	}
 
 	public MenuView(Context context, AttributeSet attrs) {

@@ -4,7 +4,7 @@
     <style name="menu_button_style">
         <item name="android:layout_width">@dimen/width_menu_button</item>
         <item name="android:layout_height">@dimen/height_menu_button</item>
-        <item name="android:background">@color/menu_button_gray</item>
+        <item name="android:background">@color/menu_button_blue</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>

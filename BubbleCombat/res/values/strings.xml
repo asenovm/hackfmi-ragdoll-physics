@@ -26,6 +26,7 @@
     <string name="menu_hard">Hard</string>
     <string name="menu_host">Host</string>
     <string name="menu_quit">Quit</string>
+    <string name="menu_title">Games you can join</string>
     
     <string name="mode_ready">Lunar Lander\nPress Up To Play</string>
 	<string name="mode_pause">Paused\nPress Up To Resume</string>

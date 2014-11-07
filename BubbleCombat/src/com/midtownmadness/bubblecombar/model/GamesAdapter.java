@@ -25,8 +25,9 @@ public class GamesAdapter extends ArrayAdapter<GameModel> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final GameModel model = getItem(position);
+		// TODO start reusing the convert view
 		final MenuGameView view = new MenuGameView(parent.getContext());
+		view.populateFromModel(getItem(position));
 		return view;
 	}
 
