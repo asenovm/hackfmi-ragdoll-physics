@@ -9,5 +9,14 @@ public class MultiplayerGame {
 	public MultiplayerGame(BluetoothSocket clientSocket) {
 		this.socket = clientSocket;
 	}
+	
+	public String getName(){
+		return socket.getRemoteDevice().getName();
+	}
+	
+	@Override
+	public String toString() {
+		return socket.getRemoteDevice().getAddress();
+	}
 
 }

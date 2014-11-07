@@ -2,6 +2,7 @@ package com.midtownmadness.bubblecombat.views;
 
 import com.midtownmadness.bubblecombar.model.GameModel;
 import com.midtownmadness.bubblecombat.R;
+import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -27,8 +28,8 @@ public class MenuGameView extends LinearLayout {
 		this(context, null);
 	}
 
-	public void populateFromModel(final GameModel model) {
-		textView.setText(model.getGameName());
+	public void populateFromModel(final MultiplayerGame model) {
+		textView.setText(model.getName());
 	}
 
 }

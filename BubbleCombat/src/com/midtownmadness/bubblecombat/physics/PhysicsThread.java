@@ -15,9 +15,9 @@ public class PhysicsThread extends Thread {
 
 	@Override
 	public void run() {
-		boolean running = true;
-		while (running) {
-			world.step();
-		}
+//		boolean running = true;
+//		while (running) {
+//			world.step();
+//		}
 	}
 }

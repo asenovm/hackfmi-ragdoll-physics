@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
 import com.midtownmadness.bubblecombat.views.MenuGameView;
 import com.midtownmadness.bubblecombat.views.MenuView;
 
@@ -12,14 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-public class GamesAdapter extends ArrayAdapter<GameModel> {
+public class GamesAdapter extends ArrayAdapter<MultiplayerGame> {
 
-	private final List<GameModel> model;
+	private final List<MultiplayerGame> model;
 
 	public GamesAdapter(Context context, int textViewResourceId,
-			GameModel[] items) {
+			MultiplayerGame[] items) {
 		super(context, textViewResourceId, items);
-		model = new LinkedList<GameModel>();
+		model = new LinkedList<MultiplayerGame>();
 		model.addAll(Arrays.asList(items));
 	}
 
@@ -37,12 +38,12 @@ public class GamesAdapter extends ArrayAdapter<GameModel> {
 	}
 
 	@Override
-	public GameModel getItem(int position) {
+	public MultiplayerGame getItem(int position) {
 		return model.get(position);
 	}
 
 	@Override
-	public void add(GameModel object) {
+	public void add(MultiplayerGame object) {
 		model.add(object);
 	}
 

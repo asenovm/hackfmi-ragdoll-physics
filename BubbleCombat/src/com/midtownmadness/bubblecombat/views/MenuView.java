@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.midtownmadness.bubblecombar.model.GamesAdapter;
-import com.midtownmadness.bubblecombar.model.MockGamesAdapter;
+import com.midtownmadness.bubblecombar.model.MockAdapter;
 import com.midtownmadness.bubblecombat.R;
 
 public class MenuView extends LinearLayout {
@@ -19,21 +19,7 @@ public class MenuView extends LinearLayout {
 	 */
 	private static final String TAG = MenuView.class.getSimpleName();
 
-	private class HostOnClickListener implements OnClickListener {
-		@Override
-		public void onClick(View v) {
-			Log.i(TAG, "host button is clicked");
-		}
-	}
-
-	private class QuitOnClickListener implements OnClickListener {
-		@Override
-		public void onClick(View v) {
-			Log.i(TAG, "quit button is clicked");
-		}
-	}
-
-	public MenuView(Context context, AttributeSet attrs, int defStyle) {
+	public MenuView(Context context, AttributeSet attrs, int defStyle, OnClickListener listener,GamesAdapter adapter) {
 		super(context, attrs, defStyle);
 		final LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -41,26 +27,25 @@ public class MenuView extends LinearLayout {
 		setBackgroundResource(R.color.light_gray);
 
 		final View quitButton = findViewById(R.id.quit_button);
-		quitButton.setOnClickListener(new QuitOnClickListener());
+		quitButton.setOnClickListener(listener);
 
 		final View hostButton = findViewById(R.id.host_button);
-		hostButton.setOnClickListener(new HostOnClickListener());
+		hostButton.setOnClickListener(listener);
 
 		final ListView gamesListView = (ListView) findViewById(R.id.games_list);
 
 		gamesListView.addHeaderView(inflater.inflate(R.layout.menu_title_view,
 				gamesListView, false));
 
-		final GamesAdapter mockAdapter = new MockGamesAdapter(context);
-		gamesListView.setAdapter(mockAdapter);
+		gamesListView.setAdapter(adapter);
 	}
 
-	public MenuView(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+//	public MenuView(Context context, AttributeSet attrs) {
+//		this(context, attrs, 0);
+//	}
 
-	public MenuView(Context context) {
-		this(context, null);
+	public MenuView(Context context, OnClickListener onClickListener, GamesAdapter adapter) {
+		this(context, null, 0, onClickListener, adapter);
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -39,10 +40,10 @@ public class MultiplayManager {
 				// Get the BluetoothDevice object from the Intent
 				BluetoothDevice device = intent
 						.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				Log.d(TAG, "DEVICE FOUND!" + device.toString());
+				Log.e(TAG, "DEVICE FOUND!" + device.toString());
 				onDeviceDiscovered(device);
 			}
-			Log.d(TAG, "ON RECEIVE!");
+			Log.e(TAG, "ON RECEIVE!");
 		}
 	};
 
@@ -55,25 +56,25 @@ public class MultiplayManager {
 	}
 
 	protected void onDeviceDiscovered(BluetoothDevice device) {
-		Exception exc = null;
-		ClientThread clientThread = new ClientThread(device);
+		ClientThread clientThread = new ClientThread(device,
+				new Callback<BluetoothSocket>() {
 
-		try {
-			clientThread.start();
-		} catch (BluetoothConnectException e) {
-			// it's a device, but it has nothing to discover
-			e.printStackTrace();
-			exc = e;
-		} finally {
-			if (exc == null) {
-				onGameDiscovered(clientThread.clientSocket);
-			}
-		}
+					@Override
+					public void call(BluetoothSocket argument) {
+						if (argument == null) {
+							Log.e(TAG, "Socket receive failure");
+						} else {
+							onGameDiscovered(argument);
+						}
+					}
+				});
+
+		clientThread.start();
 
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {
-		for (MultiplayEventListener listener : listeners){
+		for (MultiplayEventListener listener : listeners) {
 			listener.onGameDiscovered(new MultiplayerGame(clientSocket));
 		}
 	}
@@ -110,7 +111,9 @@ public class MultiplayManager {
 				onPlayerConnected(socket);
 
 			} catch (IOException e) {
+				// timeout
 				e.printStackTrace();
+				Log.e(TAG, "Timeout when hosting!");
 			}
 		}
 	}
@@ -149,18 +152,23 @@ public class MultiplayManager {
 	private class ClientThread extends Thread {
 		private BluetoothDevice device;
 		private BluetoothSocket clientSocket;
+		private Callback<BluetoothSocket> callback;
 
-		public ClientThread(BluetoothDevice device) {
+		public ClientThread(BluetoothDevice device,
+				Callback<BluetoothSocket> callback) {
 			this.device = device;
+			this.callback = callback;
 		}
 
 		@Override
 		public void run() {
 			try {
-				clientSocket = this.device.createInsecureRfcommSocketToServiceRecord(UUID);
+				clientSocket = this.device
+						.createInsecureRfcommSocketToServiceRecord(UUID);
 			} catch (IOException e) {
 				e.printStackTrace();
-				throw new BluetoothConnectException(e);
+			} finally {
+				callback.call(clientSocket);
 			}
 		}
 	}
