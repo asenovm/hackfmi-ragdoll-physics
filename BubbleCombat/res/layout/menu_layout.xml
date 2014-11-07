@@ -37,8 +37,10 @@
         <ListView
             android:id="@+id/games_list"
             android:layout_width="match_parent"
+            android:drawSelectorOnTop="false"
+            android:listSelector="@drawable/menu_list_selector"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp" />
+            android:divider="@null" />
     </RelativeLayout>
 
 </merge>

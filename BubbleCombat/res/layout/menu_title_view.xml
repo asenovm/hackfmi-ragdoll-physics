@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="@dimen/menu_title_padding"
+    android:padding="@dimen/padding_menu_title"
     android:text="@string/menu_title"
     android:textColor="@color/menu_button_blue"
     android:textSize="@dimen/text_size_menu_title"

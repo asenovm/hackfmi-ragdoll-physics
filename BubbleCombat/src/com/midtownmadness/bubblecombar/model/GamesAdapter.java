@@ -4,17 +4,19 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.midtownmadness.bubblecombat.views.MenuGameView;
-import com.midtownmadness.bubblecombat.views.MenuView;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.midtownmadness.bubblecombar.listeners.GameRoomListener;
+import com.midtownmadness.bubblecombat.views.MenuGameView;
+
 public class GamesAdapter extends ArrayAdapter<GameModel> {
 
 	private final List<GameModel> model;
+
+	private GameRoomListener listener;
 
 	public GamesAdapter(Context context, int textViewResourceId,
 			GameModel[] items) {
@@ -23,12 +25,21 @@ public class GamesAdapter extends ArrayAdapter<GameModel> {
 		model.addAll(Arrays.asList(items));
 	}
 
+	public void setGameRoomListener(final GameRoomListener listener) {
+		this.listener = listener;
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO start reusing the convert view
-		final MenuGameView view = new MenuGameView(parent.getContext());
-		view.populateFromModel(getItem(position));
-		return view;
+		MenuGameView result;
+		if (convertView == null) {
+			result = new MenuGameView(parent.getContext());
+		} else {
+			result = (MenuGameView) convertView;
+		}
+		result.populateFromModel(getItem(position));
+		result.setListener(listener);
+		return result;
 	}
 
 	@Override
