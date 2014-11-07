@@ -36,13 +36,14 @@ public class PhysicsService implements Runnable {
 	private boolean paused;
 
 	public PhysicsService() {
-		world = new World(GRAVITY);
 		thread = new Thread(this);
 		thread.start();
 	}
 
 	@Override
 	public void run() {
+		world = new World(GRAVITY);
+		
 		boolean running = true;
 		while (running) {
 			if (!paused) {
@@ -55,6 +56,7 @@ public class PhysicsService implements Runnable {
 				}
 				world.step(0.016666666f, VELOCITY_ITERATIONS,
 						POSITION_ITERATIONS);
+				world.clearForces();
 				long stepTime = System.currentTimeMillis() - startTime;
 				if (stepTime < ITERATION_TIME) {
 					try {
