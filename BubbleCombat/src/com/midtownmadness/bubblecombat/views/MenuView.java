@@ -49,8 +49,11 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		hostButton.setOnClickListener(new HostOnClickListener());
 
 		final ListView gamesListView = (ListView) findViewById(R.id.games_list);
-		gamesListView.addHeaderView(inflater.inflate(R.layout.menu_title_view,
-				gamesListView, false));
+		final View headerView = inflater.inflate(R.layout.menu_title_view,
+				gamesListView, false);
+
+		gamesListView.addHeaderView(headerView);
+		gamesListView.setEmptyView(findViewById(R.id.menu_list_empty_view));
 
 		final GamesAdapter mockAdapter = new MockGamesAdapter(context);
 		mockAdapter.setGameRoomListener(this);

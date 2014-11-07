@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,8 @@ import com.midtownmadness.bubblecombar.listeners.GameRoomListener;
 import com.midtownmadness.bubblecombat.views.MenuGameView;
 
 public class GamesAdapter extends ArrayAdapter<GameModel> {
+
+	private static final String TAG = GamesAdapter.class.getSimpleName();
 
 	private final List<GameModel> model;
 

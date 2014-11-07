@@ -8,5 +8,6 @@
     <dimen name="text_size_menu_item">20sp</dimen>
     <dimen name="padding_menu_title">20dp</dimen>
     <dimen name="padding_menu_item">10dp</dimen>
+    <dimen name="width_shadow">10dp</dimen>
 
 </resources>
