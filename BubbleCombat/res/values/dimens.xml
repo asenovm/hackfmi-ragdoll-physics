@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="width_menu_button">160dp</dimen>
+    <dimen name="height_menu_button">60dp</dimen>
+    <dimen name="margin_vertical_menu_button">40dp</dimen>
+    <dimen name="text_size_menu_title">30sp</dimen>
+    <dimen name="menu_title_padding">20dp</dimen>
+
+</resources>
