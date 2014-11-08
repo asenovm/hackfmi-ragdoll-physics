@@ -63,12 +63,10 @@ public class DefaultLevelBuilder extends LevelBuilder {
 
 		// Player
 		int currentPlayerId = players.get(0);
-		Vec2 position = new Vec2(STARTING_X, STARTING_Y);
-		levelObject.setThisPlayer(buildPlayer(position, levelObject,
+		levelObject.setThisPlayer(buildPlayer(levelObject,
 				physicsService, currentPlayerId, resources));
 		for (int i = 1; i < players.size(); i++) {
-			Vec2 startingPos = new Vec2((i + 1) * STARTING_X, STARTING_Y);
-			buildPlayer(startingPos, levelObject, physicsService,
+			buildPlayer(levelObject, physicsService,
 					players.get(i), resources);
 		}
 
@@ -79,13 +77,13 @@ public class DefaultLevelBuilder extends LevelBuilder {
 		return levelObject;
 	}
 
-	private PlayerObject buildPlayer(Vec2 position, LevelObject levelObject,
+	private PlayerObject buildPlayer(LevelObject levelObject,
 			PhysicsService physicsService, int playerId, Resources resources) {
 		
 		Bitmap bitmap = BitmapFactory.decodeResource(resources,
 				PLAYER_BITMAPS[playerId % PLAYER_BITMAPS.length]);
 		
-		final PlayerObject player = new PlayerObject(position, bitmap, playerId);
+		final PlayerObject player = new PlayerObject(new Vec2((playerId + 1) * STARTING_X, STARTING_Y), bitmap, playerId);
 		levelObject.objects.add(player);
 		physicsService.createBody(new BodyCreationRequest(
 				player.buildBodyDef(), player.buildFixtureDef(),
