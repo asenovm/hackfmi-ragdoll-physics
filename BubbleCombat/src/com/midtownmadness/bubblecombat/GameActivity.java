@@ -174,7 +174,8 @@ public class GameActivity extends BaseActivity implements
 				final AlertDialog.Builder builder = new AlertDialog.Builder(
 						GameActivity.this);
 
-				builder.setMessage(R.string.game_over)
+				builder.setTitle(R.string.game_over)
+						.setMessage(R.string.game_result)
 						.setCancelable(false)
 						.setPositiveButton(R.string.back_to_menu,
 								new QuitOnClickListener()).create().show();
