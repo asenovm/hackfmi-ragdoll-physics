@@ -1,6 +1,8 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
@@ -14,7 +16,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	 */
 	private static final String TAG = BaseStrategy.class.getSimpleName();
 
-	private SparseArray<BluetoothSocket> connectPlayers = new SparseArray<BluetoothSocket>();
+	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
 
 	private LooperThread looper;
 
@@ -65,6 +67,10 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 
 	public LooperThread getThread() {
 		return looper;
+	}
+	
+	public Map<Integer, BluetoothSocket> getConnectedPlayers(){
+		return connectPlayers;
 	}
 
 	public abstract void onLooperReady();
