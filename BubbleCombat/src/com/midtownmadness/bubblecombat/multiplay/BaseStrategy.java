@@ -49,7 +49,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	protected void sendMessage(Object payload, MessageType type,
 			BluetoothSocket... players) {
 		BluetoothMessage message = new BluetoothMessage(type, payload);
-		toast("Sending message" + message.toString());
+//		toast("Sending message" + message.toString());
 		for (BluetoothSocket playerSocket : players) {
 			if (players == null) {
 				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
@@ -61,7 +61,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 			try {
 				playerSocket.getOutputStream().write(message.toBytes());
 				playerSocket.getOutputStream().flush();
-				toast("Written to " + playerSocket.toString() + " and flushed");
+//				toast("Written to " + playerSocket.toString() + " and flushed");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
