@@ -142,9 +142,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 					try {
 						if (otherPlayer.getInputStream().available() > 0) {
 							BluetoothMessage message = obtainMessage(otherPlayer);
-							toast("I've received "
-									+ (message.payload != null ? message.payload
-											: "null"));
+							manager.onMultiplayEvent((MultiplayEvent) message.payload);
 						}
 					} catch (IOException e) {
 						e.printStackTrace();

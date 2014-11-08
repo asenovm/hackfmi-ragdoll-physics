@@ -1,12 +1,19 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
-public class MultiplayEvent {
+import java.io.Serializable;
 
-	public final int x;
+public class MultiplayEvent implements Serializable {
 
-	public final int y;
+	/**
+	 * {@value}
+	 */
+	private static final long serialVersionUID = 4852219829927505606L;
 
-	public MultiplayEvent(final int x, final int y) {
+	public final float x;
+
+	public final float y;
+
+	public MultiplayEvent(final float x, final float y) {
 		this.x = x;
 		this.y = y;
 	}

@@ -181,6 +181,12 @@ public class MultiplayManager implements Closeable {
 
 	}
 
+	public void onMultiplayEvent(final MultiplayEvent event) {
+		for (final MultiplayEventListener listener : listeners) {
+			listener.onMultiplayEvent(event);
+		}
+	}
+
 	public void action() {
 		strategy.action();
 	}
