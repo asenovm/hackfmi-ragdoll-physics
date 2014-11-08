@@ -35,6 +35,9 @@ public class MenuView extends LinearLayout {
 		final View playButton = findViewById(R.id.play_button);
 		playButton.setOnClickListener(listener);
 
+		final View refreshButton = findViewById(R.id.refresh_button);
+		refreshButton.setOnClickListener(listener);
+
 		final ListView gamesListView = (ListView) findViewById(R.id.games_list);
 		final View headerView = inflater.inflate(R.layout.menu_title_view,
 				gamesListView, false);
@@ -45,10 +48,6 @@ public class MenuView extends LinearLayout {
 		gamesListView.setAdapter(adapter);
 
 	}
-
-	// public MenuView(Context context, AttributeSet attrs) {
-	// this(context, attrs, 0);
-	// }
 
 	public MenuView(Context context, OnClickListener onClickListener,
 			GamesAdapter adapter) {

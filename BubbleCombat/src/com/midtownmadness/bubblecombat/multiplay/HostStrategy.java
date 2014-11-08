@@ -3,7 +3,6 @@ package com.midtownmadness.bubblecombat.multiplay;
 import java.io.IOException;
 
 import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.graphics.Paint.Join;
 import android.os.SystemClock;
@@ -16,16 +15,13 @@ public class HostStrategy extends BaseStrategy {
 
 	protected static final String TAG = HostStrategy.class.getSimpleName();
 	private BluetoothServerSocket serverSocket;
-	private MultiplayManager manager;
-	private BluetoothSocket otherPlayer;
 	private Object monitor = new Object();
 	private boolean goCommandGiven;
 
 	public HostStrategy(Context context, BluetoothServerSocket serverSocket,
 			MultiplayManager manager) {
-		super(context);
+		super(context, manager);
 		this.serverSocket = serverSocket;
-		this.manager = manager;
 	}
 
 	@Override

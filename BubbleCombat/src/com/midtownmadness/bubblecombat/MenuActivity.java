@@ -40,7 +40,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Assert.assertNotNull(multiplayManager);
 
 		multiplayManager.addListener(this);
-		multiplayManager.searchForGames(5000);
+		multiplayManager.searchForGames();
 	}
 
 	@Override
@@ -55,23 +55,22 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		case R.id.play_button:
 			play();
 			break;
-
+		case R.id.refresh_button:
+			refresh();
+			break;
 		default:
 			break;
 		}
 	}
 
+	private void refresh() {
+		multiplayManager.refresh();
+	}
+
 	private void host() {
-		try {
-			multiplayManager.host();
-			Intent getVisible = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			startActivityForResult(getVisible,
-					REQUEST_CODE_BLUETOOTH_VISIBILITY);
-		} catch (IOException e) {
-			toast("hosting fucked up");
-			e.printStackTrace();
-		}
+		Intent getVisible = new Intent(
+				BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		startActivityForResult(getVisible, REQUEST_CODE_BLUETOOTH_VISIBILITY);
 	}
 
 	private void play() {

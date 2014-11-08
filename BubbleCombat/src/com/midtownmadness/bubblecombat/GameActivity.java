@@ -83,6 +83,8 @@ public class GameActivity extends BaseActivity implements
 
 		gameView = new GameView(this, level, physicsService);
 		setContentView(gameView);
+		
+		manager.action();
 	}
 
 	/**
