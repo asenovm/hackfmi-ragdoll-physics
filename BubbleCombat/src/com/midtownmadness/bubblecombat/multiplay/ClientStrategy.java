@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 
 import com.midtownmadness.bubblecombat.Settings;
+import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -88,7 +89,8 @@ public class ClientStrategy extends BaseStrategy {
 
 				final BluetoothMessage response = obtainMessage(hostSocket);
 				if (response.messageType == MessageType.GO) {
-					manager.onGameCommenced();
+					final GoMessageObject meta = (GoMessageObject) response.payload;
+					manager.onGameCommenced(meta.timestamp);
 				}
 			}
 		});

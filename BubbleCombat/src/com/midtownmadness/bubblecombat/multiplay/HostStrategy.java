@@ -86,9 +86,8 @@ public class HostStrategy extends BaseStrategy {
 				toast("Player " + otherPlayer.getRemoteDevice().getName()
 						+ "has joined!");
 
-				sendGoMessage();
-				manager.onGameCommenced();
-
+				final long syncStamp = sendGoMessage();
+				manager.onGameCommenced(syncStamp);
 			}
 		});
 	}
@@ -96,7 +95,7 @@ public class HostStrategy extends BaseStrategy {
 	private long sendGoMessage() {
 		MessageType type = MessageType.GO;
 		long baseTimestamp = SystemClock.uptimeMillis();
-		GoMessageObject payload  = new GoMessageObject(baseTimestamp);
+		GoMessageObject payload = new GoMessageObject(baseTimestamp);
 		sendMessage(payload, type, otherPlayer);
 		return baseTimestamp;
 	}

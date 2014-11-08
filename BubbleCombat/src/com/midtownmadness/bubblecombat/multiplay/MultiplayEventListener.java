@@ -9,7 +9,7 @@ public interface MultiplayEventListener {
 
 	void onGameSynced(MultiplayerGame game);
 
-	void onGameCommence();
+	void onGameCommenced(final long syncStamp);
 
 	void onError();
 }

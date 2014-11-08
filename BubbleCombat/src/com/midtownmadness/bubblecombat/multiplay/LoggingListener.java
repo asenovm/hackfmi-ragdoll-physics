@@ -30,7 +30,7 @@ public class LoggingListener implements MultiplayEventListener {
 	}
 
 	@Override
-	public void onGameCommence() {
+	public void onGameCommenced(final long syncStamp) {
 		Log.d(TAG, "on game commence ");
 	}
 
