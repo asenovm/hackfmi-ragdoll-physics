@@ -18,17 +18,16 @@ package com.midtownmadness.bubblecombat;
 
 import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
 
+import java.util.List;
+
 import org.jbox2d.dynamics.contacts.Contact;
 
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 
 import com.midtownmadness.bubblecombat.game.GameObject;
@@ -68,10 +67,11 @@ public class GameActivity extends BaseActivity implements
 			throw new RuntimeException();
 		}
 
+		List<Integer> players = manager.getPlayerIds();
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
 		physicsService = new PhysicsService();
 		physicsService.setCollisionListener(this);
-		level = lbuilder.build(physicsService, getResources());
+		level = lbuilder.build(players, physicsService, getResources());
 
 		// get screen size
 		Display display = getWindowManager().getDefaultDisplay();
@@ -108,7 +108,7 @@ public class GameActivity extends BaseActivity implements
 
 	@Override
 	public void onPlayerConnected(int playerId) {
-		// XXX do nothing here
+		
 	}
 
 	@Override
