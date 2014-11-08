@@ -20,10 +20,12 @@ import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
 
 import java.util.List;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -54,6 +56,23 @@ public class GameActivity extends BaseActivity implements
 	private PhysicsService physicsService;
 	private LevelObject level;
 	private long syncStamp;
+
+	private class BackToMenuOnClickListener implements OnClickListener {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			final Intent menuIntent = new Intent(getApplicationContext(),
+					MenuActivity.class);
+			startActivity(menuIntent);
+			finish();
+		}
+	}
+
+	private class QuitOnClickListener implements OnClickListener {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			finish();
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +130,7 @@ public class GameActivity extends BaseActivity implements
 		PlayerObject playerObject = level.getPlayerObject(playerId);
 		Body playerBody = playerObject.getBody();
 		physicsService.applyState(playerBody, e);
-//		physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
+		// physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
 	}
 
 	@Override
@@ -157,8 +176,12 @@ public class GameActivity extends BaseActivity implements
 	}
 
 	private void endGame() {
-		// TODO Auto-generated method stub
-
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.game_over)
+				.setPositiveButton(R.string.back_to_menu,
+						new BackToMenuOnClickListener())
+				.setNegativeButton(R.string.quit, new QuitOnClickListener())
+				.create().show();
 	}
 
 	private void playCollisionSound() {
