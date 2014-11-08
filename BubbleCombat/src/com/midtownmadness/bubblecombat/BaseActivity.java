@@ -13,4 +13,10 @@ public class BaseActivity extends Activity {
 		Object ourSystemService = getApplicationContext().getSystemService(name);
 		return ourSystemService;
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		((GlobalContext) getApplicationContext()).onDestroy();
+	}
 }

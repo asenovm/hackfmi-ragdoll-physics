@@ -6,4 +6,5 @@ public interface MultiplayStrategy {
 	public void handshakeAndLoad();
 	public Handler getHandler();
 	public void start();
+	public void close();
 }

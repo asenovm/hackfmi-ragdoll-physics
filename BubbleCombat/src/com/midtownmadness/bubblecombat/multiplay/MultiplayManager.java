@@ -1,5 +1,6 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,11 +18,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.sax.StartElementListener;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
 
-public class MultiplayManager {
+public class MultiplayManager implements Closeable {
 	public static final String SERVICE_NAME = MultiplayManager.class
 			.getSimpleName();
 	private static final String NAME = Settings.GAME_NAME;
@@ -29,6 +32,7 @@ public class MultiplayManager {
 			.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
 	private static final String TAG = MultiplayManager.class.getSimpleName();
 	private static int nextId = Settings.HOST_ID;
+	private Handler handler = new Handler();
 
 	private List<MultiplayEventListener> listeners = new ArrayList<MultiplayEventListener>();
 	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
@@ -48,9 +52,11 @@ public class MultiplayManager {
 	};
 
 	private MultiplayStrategy strategy;
+	private Context context;
 
 	public MultiplayManager(Context context) {
 		// log by default>
+		this.context = context;
 		this.listeners.add(new LoggingListener());
 
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -59,20 +65,26 @@ public class MultiplayManager {
 
 	protected void onDeviceDiscovered(BluetoothDevice device) {
 		// XXX this should maybe not be part of ClientStrategy?
-		ClientStrategy strategy = new ClientStrategy(device,
-				new Callback<BluetoothSocket>() {
+		// XXX move this to a List<ClientStrategy>, when you see multiple hosts
+		// XXX this for the moment allows us to see no more than one bluetooth
+		// game - the first one
+		// TODO generalize
+		if (strategy == null) {
+			this.strategy = new ClientStrategy(device,
+					new Callback<BluetoothSocket>() {
 
-					@Override
-					public void call(BluetoothSocket argument) {
-						if (argument == null) {
-							Log.e(TAG, "Socket receive failure");
-						} else {
-							onGameDiscovered(argument);
+						@Override
+						public void call(BluetoothSocket argument) {
+							if (argument == null) {
+								Log.e(TAG, "Socket receive failure");
+							} else {
+								onGameDiscovered(argument);
+							}
 						}
-					}
-				});
+					});
 
-		strategy.start();
+			strategy.start();
+		}
 
 	}
 
@@ -94,9 +106,30 @@ public class MultiplayManager {
 		this.strategy.start();
 	}
 
-	public void searchForGames() {
-		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-		adapter.startDiscovery();
+	public void searchForGames(final int timeoutMillis) {
+
+		final Runnable searchForGamesRunnable = new Runnable() {
+
+			@Override
+			public void run() {
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+				adapter.startDiscovery();
+			}
+		};
+		searchForGamesRunnable.run();
+		
+		handler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				if (strategy == null) {
+					// we have not picked client strategy
+					searchForGamesRunnable.run();
+					handler.postDelayed(this, timeoutMillis);
+				}
+			}
+		}, timeoutMillis);
+
 	}
 
 	void onPlayerConnected(BluetoothSocket socket) {
@@ -129,5 +162,20 @@ public class MultiplayManager {
 
 		}
 	}
+
+	public void removeListener(MultiplayEventListener menuActivity) {
+		listeners.remove(menuActivity);
+	}
+
+	public void close() {
+		context.unregisterReceiver(broadcastReceiver);
+		if (strategy != null) {
+			strategy.close();
+		}
+	}
+
+	// public void joinGame(MultiplayerGame model) {
+	//
+	// }
 
 }

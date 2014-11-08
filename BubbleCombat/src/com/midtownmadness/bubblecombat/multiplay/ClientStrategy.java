@@ -8,7 +8,7 @@ import android.bluetooth.BluetoothSocket;
 public class ClientStrategy extends BaseStrategy {
 
 	private BluetoothDevice device;
-	private BluetoothSocket clientSocket;
+	private BluetoothSocket hostSocket;
 	private Callback<BluetoothSocket> callback;
 
 	public ClientStrategy(BluetoothDevice device,
@@ -21,27 +21,34 @@ public class ClientStrategy extends BaseStrategy {
 
 	@Override
 	public void handshakeAndLoad() {
-
-	}
-
-
-	@Override
-	public void onLooperReady() {
 		getHandler().post(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					clientSocket = device
+					hostSocket = device
 							.createInsecureRfcommSocketToServiceRecord(MultiplayManager.UUID);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
-					callback.call(clientSocket);
+					callback.call(hostSocket);
 				}
 			}
 		});
+	}
 
+	@Override
+	public void onLooperReady() {
+		handshakeAndLoad();
+	}
+
+	@Override
+	public void close() {
+		try {
+			hostSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

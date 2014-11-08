@@ -12,6 +12,7 @@ public class HostStrategy extends BaseStrategy {
 	protected static final String TAG = HostStrategy.class.getSimpleName();
 	private BluetoothServerSocket serverSocket;
 	private MultiplayManager manager;
+	private BluetoothSocket otherPlayer;
 
 	public HostStrategy(BluetoothServerSocket serverSocket,
 			MultiplayManager manager) {
@@ -22,18 +23,15 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void handshakeAndLoad() {
-
-	}
-
-	private void doHost() {
 		getHandler().post(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					BluetoothSocket socket = serverSocket
-							.accept(Settings.HOST_TIMEOUT);
-					manager.onPlayerConnected(socket);
+					otherPlayer = serverSocket.accept(Settings.HOST_TIMEOUT);
+
+					// please don't do ugly stuff with my 'otherPlayer' field
+					manager.onPlayerConnected(otherPlayer);
 
 				} catch (IOException e) {
 					// timeout
@@ -47,7 +45,16 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void onLooperReady() {
-		doHost();
+		handshakeAndLoad();
+	}
+
+	@Override
+	public void close() {
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

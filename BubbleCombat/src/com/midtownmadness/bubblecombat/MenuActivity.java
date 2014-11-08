@@ -41,7 +41,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Assert.assertNotNull(multiplayManager);
 
 		multiplayManager.addListener(this);
-		multiplayManager.searchForGames();
+		multiplayManager.searchForGames(5000);
 	}
 
 	@Override
@@ -123,9 +123,19 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 
 	@Override
 	public void onGameEntered(MultiplayerGame model) {
-		Toast.makeText(this, "attempted to enter " + model.toString(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Game connected " + model.toString(), Toast.LENGTH_SHORT).show();
 		
+		//just preventing some memory leaks : )
+		multiplayManager.removeListener(this);
+		
+		Intent intent = new Intent(this, GameActivity.class);
+		startActivity(intent, null);
 	}
 
+	@Override
+	public void onGameSynced(MultiplayerGame game) {
+		
+	}
+	
 
 }

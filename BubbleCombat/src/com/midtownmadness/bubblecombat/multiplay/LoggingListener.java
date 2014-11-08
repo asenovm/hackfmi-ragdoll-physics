@@ -21,4 +21,9 @@ public class LoggingListener implements MultiplayEventListener {
 		Log.d(TAG, "Game discoevered! " + multiplayerGame.toString());
 	}
 
+	@Override
+	public void onGameSynced(MultiplayerGame game) {
+		Log.d(TAG, "Game synced! " + game.toString());
+	}
+
 }
