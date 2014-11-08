@@ -17,6 +17,7 @@
 package com.midtownmadness.bubblecombat;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -29,6 +30,8 @@ import android.view.View.OnTouchListener;
 
 import com.midtownmadness.bubblecombat.game.DrawThread;
 import com.midtownmadness.bubblecombat.game.LevelObject;
+import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
+import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 import com.midtownmadness.bubblecombat.physics.PhysicsService;
 
 @SuppressLint("WrongCall")
@@ -41,10 +44,11 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	private PointF startDragPosition = new PointF();
 	private PointF endDragPosition = new PointF();
 	private PhysicsService physics;
+	private MultiplayManager manager;
 
 	private static final String TAG = GameView.class.getSimpleName();
 
-	public GameView(Context context, LevelObject level, PhysicsService physics) {
+	public GameView(Context context, LevelObject level, PhysicsService physics, MultiplayManager manager) {
 		super(context);
 		setOnTouchListener(this);
 
@@ -55,6 +59,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		setFocusable(true); // make sure we get key events
 		
 		this.physics = physics;
+		this.manager = manager;
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -86,7 +91,9 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 			dragVector = new Vec2((endDragPosition.x - startDragPosition.x)
 					/ level.scale.x, (endDragPosition.y - startDragPosition.y)
 					/ level.scale.y);
-			physics.applyMovement(level.getThisPlayer().getBody(), dragVector);
+			Body body = level.getThisPlayer().getBody();
+			manager.addEvent(new MultiplayEvent((int)body.getPosition().x, (int)body.getPosition().y));
+			physics.applyMovement(body, dragVector);
 		}
 		return true;
 	}

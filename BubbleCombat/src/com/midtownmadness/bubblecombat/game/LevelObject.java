@@ -19,4 +19,12 @@ public class LevelObject {
 	public void setThisPlayer(PlayerObject player) {
 		thisPlayer = player;
 	}
+
+	public PlayerObject getPlayerObject(int playerId) {
+		for(GameObject obj : objects) {
+			if(obj instanceof PlayerObject && ((PlayerObject)obj).getPlayerId() == playerId)
+				return (PlayerObject) obj;
+		}
+		return null;
+	}
 }

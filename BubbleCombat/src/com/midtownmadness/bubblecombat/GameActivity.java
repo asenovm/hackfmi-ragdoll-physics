@@ -20,6 +20,8 @@ import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
 
 import java.util.List;
 
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import android.content.Intent;
@@ -66,6 +68,7 @@ public class GameActivity extends BaseActivity implements
 		if (manager == null) {
 			throw new RuntimeException();
 		}
+		manager.addListener(this);
 
 		List<Integer> players = manager.getPlayerIds();
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
@@ -81,7 +84,7 @@ public class GameActivity extends BaseActivity implements
 		level.scale = new PointF();
 		level.scale.x = level.scale.y = screenSize.y / level.size.y;
 
-		gameView = new GameView(this, level, physicsService);
+		gameView = new GameView(this, level, physicsService, manager);
 		setContentView(gameView);
 
 		manager.action();
@@ -103,7 +106,8 @@ public class GameActivity extends BaseActivity implements
 
 	@Override
 	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
-		// blank as for now
+		Body playerBody = level.getPlayerObject(playerId).getBody();
+		physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
 	}
 
 	@Override
