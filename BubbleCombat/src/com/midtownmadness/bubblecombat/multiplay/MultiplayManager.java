@@ -31,7 +31,7 @@ public class MultiplayManager implements Closeable {
 
 	private static final String TAG = MultiplayManager.class.getSimpleName();
 
-	private static int nextId = Settings.HOST_ID;
+	private static int nextId = Settings.HOST_ID + 1;
 
 	private Handler handler = new Handler();
 
