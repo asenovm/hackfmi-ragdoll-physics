@@ -18,7 +18,6 @@ package com.midtownmadness.bubblecombat;
 
 import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.jbox2d.dynamics.Body;
@@ -57,6 +56,20 @@ public class GameActivity extends BaseActivity implements
 	private PhysicsService physicsService;
 	private LevelObject level;
 	private long syncStamp;
+
+	private class GameResultRunnable implements Runnable {
+		@Override
+		public void run() {
+			final AlertDialog.Builder builder = new AlertDialog.Builder(
+					GameActivity.this);
+
+			builder.setTitle(R.string.game_over)
+					.setMessage(R.string.game_result)
+					.setCancelable(false)
+					.setPositiveButton(R.string.back_to_menu,
+							new QuitOnClickListener()).create().show();
+		}
+	}
 
 	private class QuitOnClickListener implements OnClickListener {
 		@Override
@@ -167,20 +180,7 @@ public class GameActivity extends BaseActivity implements
 	}
 
 	private void endGame() {
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				final AlertDialog.Builder builder = new AlertDialog.Builder(
-						GameActivity.this);
-
-				builder.setTitle(R.string.game_over)
-						.setMessage(R.string.game_result)
-						.setCancelable(false)
-						.setPositiveButton(R.string.back_to_menu,
-								new QuitOnClickListener()).create().show();
-			}
-		});
+		runOnUiThread(new GameResultRunnable());
 	}
 
 	private void playCollisionSound() {
