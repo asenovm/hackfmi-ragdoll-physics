@@ -14,6 +14,7 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import com.midtownmadness.bubblecombat.game.GameObject;
+import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
 
 public class PhysicsService implements ContactListener {
 
@@ -95,5 +96,11 @@ public class PhysicsService implements ContactListener {
 	@Override
 	public void preSolve(Contact arg0, Manifold arg1) {
 		// Nothing
+	}
+
+	public void applyState(Body playerBody, MultiplayEvent e) {
+		playerBody.setTransform(new Vec2(e.x, e.y), 0);
+		playerBody.setLinearVelocity(new Vec2(e.vx, e.vy));
+		applyMovement(playerBody, new Vec2(e.dx, e.dy));
 	}
 }

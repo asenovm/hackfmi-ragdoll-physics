@@ -53,13 +53,14 @@ public class GameActivity extends BaseActivity implements
 	private GameView gameView;
 	private PhysicsService physicsService;
 	private LevelObject level;
+	private long syncStamp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		final Intent intent = getIntent();
-		final long syncStamp = intent.getLongExtra(EXTRA_SYNC_STAMP, -1);
+		syncStamp = intent.getLongExtra(EXTRA_SYNC_STAMP, -1);
 
 		toast(String.format("sync stamp is %s", syncStamp));
 
@@ -71,6 +72,7 @@ public class GameActivity extends BaseActivity implements
 		manager.addListener(this);
 
 		List<Integer> players = manager.getPlayerIds();
+		players.add(0, manager.getMyPlayerId());
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
 		physicsService = new PhysicsService();
 		physicsService.setCollisionListener(this);
@@ -106,8 +108,10 @@ public class GameActivity extends BaseActivity implements
 
 	@Override
 	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
-		Body playerBody = level.getPlayerObject(playerId).getBody();
-		physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
+		PlayerObject playerObject = level.getPlayerObject(playerId);
+		Body playerBody = playerObject.getBody();
+		physicsService.applyState(playerBody, e);
+//		physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
 	}
 
 	@Override

@@ -7,15 +7,14 @@ public class MultiplayEvent implements Serializable {
 	/**
 	 * {@value}
 	 */
-	private static final long serialVersionUID = 4852219829927505606L;
+	private static long serialVersionUID = 4852219829927505606L;
 
-	public final float x;
-
-	public final float y;
-
-	public MultiplayEvent(final float x, final float y) {
-		this.x = x;
-		this.y = y;
-	}
-
+	public float x;
+	public float y;
+	public float health;
+	public float dx;
+	public float dy;
+	public float vx;
+	public float vy;
+	public long timestamp;
 }

@@ -91,8 +91,21 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 			dragVector = new Vec2((endDragPosition.x - startDragPosition.x)
 					/ level.scale.x, (endDragPosition.y - startDragPosition.y)
 					/ level.scale.y);
+			
 			Body body = level.getThisPlayer().getBody();
-			manager.addEvent(new MultiplayEvent((int)body.getPosition().x, (int)body.getPosition().y));
+			Vec2 bodyPos = body.getPosition();
+			Vec2 linearVelocity = body.getLinearVelocity();
+			
+			MultiplayEvent mEvent = new MultiplayEvent();
+			mEvent.x = bodyPos.x;
+			mEvent.y = bodyPos.y;
+			mEvent.dx = dragVector.x;
+			mEvent.dy = dragVector.y;
+			mEvent.vx = linearVelocity.x;
+			mEvent.vy = linearVelocity.y;
+			mEvent.health = level.getThisPlayer().getHealth();
+			
+			manager.addEvent(mEvent);
 			physics.applyMovement(body, dragVector);
 		}
 		return true;

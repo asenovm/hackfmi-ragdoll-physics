@@ -3,7 +3,6 @@ package com.midtownmadness.bubblecombat.physics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import org.jbox2d.common.Vec2;
 
@@ -28,8 +27,6 @@ public class DefaultLevelBuilder extends LevelBuilder {
 	private static final int STARTING_X = 50;
 	private static final float STARTING_Y = 50;
 	public Bitmap background;
-
-	private Random rand = new Random();
 
 	@Override
 	public LevelObject build(List<Integer> players,
@@ -84,8 +81,10 @@ public class DefaultLevelBuilder extends LevelBuilder {
 
 	private PlayerObject buildPlayer(Vec2 position, LevelObject levelObject,
 			PhysicsService physicsService, int playerId, Resources resources) {
+		
 		Bitmap bitmap = BitmapFactory.decodeResource(resources,
-				PLAYER_BITMAPS[rand.nextInt(PLAYER_BITMAPS.length)]);
+				PLAYER_BITMAPS[playerId % PLAYER_BITMAPS.length]);
+		
 		final PlayerObject player = new PlayerObject(position, bitmap, playerId);
 		levelObject.objects.add(player);
 		physicsService.createBody(new BodyCreationRequest(
