@@ -13,13 +13,12 @@ public class PhysicsService implements Runnable {
 
 	private static final Vec2 GRAVITY = new Vec2(0, 0);
 
-	private static final int VELOCITY_ITERATIONS = 6;
+	private static final int VELOCITY_ITERATIONS = 4;
 
-	private static final int POSITION_ITERATIONS = 6;
+	private static final int POSITION_ITERATIONS = 4;
 
 	private static final long ITERATION_TIME = 16;
 
-	private Thread thread;
 	private World world;
 	private BlockingQueue<PhysicsRequest> requestQueue = new ArrayBlockingQueue<PhysicsRequest>(
 			32);
@@ -28,10 +27,6 @@ public class PhysicsService implements Runnable {
 
 	private boolean running;
 
-	public PhysicsService() {
-		thread = new Thread(this);
-	}
-
 	@Override
 	public void run() {
 		world = new World(GRAVITY);
@@ -39,13 +34,7 @@ public class PhysicsService implements Runnable {
 		while (running) {
 			if (!paused) {
 				long startTime = System.currentTimeMillis();
-				while (!requestQueue.isEmpty()) {
-					PhysicsRequest request = requestQueue.poll();
-					request.applyRequest(world);
-				}
-				world.step(0.016666666f, VELOCITY_ITERATIONS,
-						POSITION_ITERATIONS);
-				world.clearForces();
+				doPhysicsStep();
 				long stepTime = System.currentTimeMillis() - startTime;
 				if (stepTime < ITERATION_TIME) {
 					try {
@@ -58,10 +47,24 @@ public class PhysicsService implements Runnable {
 			}
 		}
 	}
+
+	public void doPhysicsStep() {
+		while (!requestQueue.isEmpty()) {
+			PhysicsRequest request = requestQueue.poll();
+			request.applyRequest(world);
+		}
+		world.step(0.016666666f/3, VELOCITY_ITERATIONS,
+				POSITION_ITERATIONS);
+		world.step(0.016666666f/3, VELOCITY_ITERATIONS,
+				POSITION_ITERATIONS);
+		world.step(0.016666666f/3, VELOCITY_ITERATIONS,
+				POSITION_ITERATIONS);
+		world.clearForces();
+	}
 	
 	public void startService() {
 		running = true;
-		thread.start();
+		world = new World(GRAVITY);
 	}
 
 	public void stop() {

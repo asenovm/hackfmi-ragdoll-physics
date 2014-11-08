@@ -1,6 +1,8 @@
 package com.midtownmadness.bubblecombat.multiplay.commobjects;
 
-public class GoMessageObject {
+import java.io.Serializable;
+
+public class GoMessageObject implements Serializable {
 	public final long timestamp;
 
 	public GoMessageObject(long timestamp){

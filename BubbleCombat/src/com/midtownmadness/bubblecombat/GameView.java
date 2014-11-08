@@ -63,7 +63,7 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		physics.startService();
-		drawThread = new DrawThread(level, holder);
+		drawThread = new DrawThread(level, holder, physics);
 		drawThread.start();
 	}
 
