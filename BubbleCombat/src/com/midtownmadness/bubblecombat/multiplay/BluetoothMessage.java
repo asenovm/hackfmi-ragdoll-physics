@@ -3,8 +3,10 @@ package com.midtownmadness.bubblecombat.multiplay;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 
 public class BluetoothMessage {
 	public MessageType messageType;
@@ -13,6 +15,19 @@ public class BluetoothMessage {
 	public static BluetoothMessage from(byte[] byteArray) {
 		return new BluetoothMessage(byteArray);
 	}
+	
+//	public static BluetoothMessage from(InputStream stream){
+//		//XXX consider caching this
+//		try {
+//			ObjectInputStream inputStream = new ObjectInputStream(stream);
+//			inputStream.readInt();
+//		} catch (StreamCorruptedException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		
+//	}
 
 	public static byte[] from(MessageType messageType, Object payload) {
 		return new BluetoothMessage(messageType, payload).toBytes();
