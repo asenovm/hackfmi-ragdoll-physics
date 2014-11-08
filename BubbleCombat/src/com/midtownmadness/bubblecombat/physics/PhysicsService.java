@@ -7,12 +7,14 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.JointDef;
+import org.jbox2d.dynamics.joints.JointType;
 
 public class PhysicsService implements Runnable {
 	public interface Callback {
 		void callback(Body body);
 	}
-	
+
 	private class BodyCreationRequest {
 		public BodyDef bodyDef;
 		public Callback callback;
@@ -43,16 +45,17 @@ public class PhysicsService implements Runnable {
 	@Override
 	public void run() {
 		world = new World(GRAVITY);
-		
+
 		boolean running = true;
 		while (running) {
 			if (!paused) {
 				long startTime = System.currentTimeMillis();
-				while(!bodyCreationQueue.isEmpty()) {
+				while (!bodyCreationQueue.isEmpty()) {
 					BodyCreationRequest request = bodyCreationQueue.poll();
 					Body newBody = world.createBody(request.bodyDef);
 					newBody.createFixture(request.fixtureDef);
-					request.callback.callback(newBody);
+					if (request.callback != null)
+						request.callback.callback(newBody);
 				}
 				world.step(0.016666666f, VELOCITY_ITERATIONS,
 						POSITION_ITERATIONS);
@@ -78,11 +81,28 @@ public class PhysicsService implements Runnable {
 		paused = false;
 	}
 
-	public void createBody(BodyDef bodyDef, FixtureDef fixtureDef, Callback callback) {
+	public void createBody(BodyDef bodyDef, FixtureDef fixtureDef,
+			Callback callback) {
 		BodyCreationRequest entry = new BodyCreationRequest();
 		entry.bodyDef = bodyDef;
-		entry.callback =  callback;
+		entry.callback = callback;
 		entry.fixtureDef = fixtureDef;
 		bodyCreationQueue.push(entry);
+	}
+	
+	private void createJoint(JointDef joint, Callback callback) {
+		
+	}
+	
+	public void createMoveAnchor(Body body) {
+		
+	}
+	
+	public void destroyMoveAnchor(Body body) {
+		
+	}
+	
+	public void applyMovement(Body body) {
+		
 	}
 }
