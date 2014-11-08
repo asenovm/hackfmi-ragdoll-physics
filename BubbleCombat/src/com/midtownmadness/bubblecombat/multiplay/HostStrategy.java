@@ -64,7 +64,11 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void commenceGame(final MultiplayerGame game) {
-		// blank as for now
+		sendGoMessage(game);
+	}
+
+	private void sendGoMessage(MultiplayerGame game) {
+		game.get
 	}
 
 }

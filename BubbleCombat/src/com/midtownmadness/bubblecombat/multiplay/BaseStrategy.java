@@ -16,8 +16,8 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	 */
 	private static final String TAG = BaseStrategy.class.getSimpleName();
 
-	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
 
+	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
 	private LooperThread looper;
 
 	public BaseStrategy() {

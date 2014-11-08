@@ -32,4 +32,8 @@ public class MultiplayerGame {
 		return syncTimestamp;
 	}
 
+	public BluetoothSocket getPlayerSocket() {
+		return otherPlayer;
+	}
+
 }
