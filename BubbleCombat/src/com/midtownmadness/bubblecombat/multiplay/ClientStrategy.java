@@ -69,22 +69,28 @@ public class ClientStrategy extends BaseStrategy {
 	@Override
 	public void commenceGame(final MultiplayerGame game,
 			final MultiplayEventListener listener) {
-		try {
-			hostSocket.connect();
-		} catch (IOException e) {
-			toast("Network error");
-			e.printStackTrace();
-		}
-		onPlayerConnected(HOST_ID, hostSocket);
+		getHandler().post(new Runnable() {
 
-		sendEmptyMessage(MessageType.COMMENCE_GAME, super.getConnectedPlayers()
-				.get(Settings.HOST_ID));
+			@Override
+			public void run() {
+				try {
+					hostSocket.connect();
+				} catch (IOException e) {
+					toast("Network error");
+					e.printStackTrace();
+				}
+				onPlayerConnected(HOST_ID, hostSocket);
 
-		final BluetoothMessage response = obtainMessage(hostSocket);
-		if (response.messageType == MessageType.GO) {
-			listener.onGameCommence();
-		} else {
-			listener.onError();
-		}
+				sendEmptyMessage(MessageType.COMMENCE_GAME,
+						getConnectedPlayers().get(Settings.HOST_ID));
+
+				final BluetoothMessage response = obtainMessage(hostSocket);
+				if (response.messageType == MessageType.GO) {
+					listener.onGameCommence();
+				} else {
+					listener.onError();
+				}
+			}
+		});
 	}
 }
