@@ -55,4 +55,10 @@ public class ClientStrategy extends BaseStrategy {
 		}
 	}
 
+	@Override
+	public void commenceGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -127,7 +127,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onGameEntered(MultiplayerGame model) {
+	public void onGameSelected(MultiplayerGame model) {
 		Toast.makeText(this, "Game connected " + model.toString(),
 				Toast.LENGTH_SHORT).show();
 
