@@ -1,7 +1,7 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 public enum MessageType {
-	JOIN_GAME, GO, ERROR;
+	JOIN_GAME, GO, ERROR, EVENT;
 
 	public static MessageType getByOrdinal(int ordinal) {
 		for (MessageType type : MessageType.values()) {

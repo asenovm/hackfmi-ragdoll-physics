@@ -5,7 +5,13 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.midtownmadness.bubblecombat.Settings;
+import com.midtownmadness.bubblecombat.multiplay.commobjects.EventMessageObject;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
@@ -21,10 +27,16 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
 	private LooperThread looper;
 	protected Context context;
-	private Handler handler = new Handler(Looper.getMainLooper());
-	
-	public BaseStrategy(Context context) {
+	private Handler uiHandler = new Handler(Looper.getMainLooper());
+	protected MultiplayManager manager;
+
+	private Queue<EventMessageObject> queue = new ConcurrentLinkedQueue<EventMessageObject>();
+	protected BluetoothSocket otherPlayer;
+	protected boolean stop;
+
+	public BaseStrategy(Context context, MultiplayManager manager) {
 		this.context = context;
+		this.manager = manager;
 		this.looper = new LooperThread();
 		this.looper.setHandlerReadyListener(new Callback<Void>() {
 
@@ -108,7 +120,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	}
 
 	public void toast(final String text) {
-		handler.post(new Runnable() {
+		uiHandler.post(new Runnable() {
 
 			@Override
 			public void run() {
@@ -116,5 +128,36 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 
 			}
 		});
+	}
+
+	@Override
+	public void action() {
+		getHandler().post(new Runnable() {
+
+			@Override
+			public void run() {
+				while (!stop) {
+					//write one
+					if (!queue.isEmpty()){
+						sendMessage(queue.poll(), MessageType.EVENT, otherPlayer);
+					}
+					
+					//read one 
+					try {
+						if (otherPlayer.getInputStream().available() > 0){
+							BluetoothMessage message = obtainMessage(otherPlayer);
+							toast("I've received " + (message.payload != null? message.payload : "null"));
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+	}
+
+	@Override
+	public void add(EventMessageObject eventMessageObject) {
+		queue.offer(eventMessageObject);
 	}
 }

@@ -68,16 +68,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	private void host() {
-		try {
-			multiplayManager.host();
-			Intent getVisible = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			startActivityForResult(getVisible,
-					REQUEST_CODE_BLUETOOTH_VISIBILITY);
-		} catch (IOException e) {
-			toast("hosting fucked up");
-			e.printStackTrace();
-		}
+		Intent getVisible = new Intent(
+				BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		startActivityForResult(getVisible, REQUEST_CODE_BLUETOOTH_VISIBILITY);
 	}
 
 	private void play() {

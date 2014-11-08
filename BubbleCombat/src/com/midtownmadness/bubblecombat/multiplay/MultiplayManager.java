@@ -3,7 +3,9 @@ package com.midtownmadness.bubblecombat.multiplay;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -15,9 +17,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
+import com.midtownmadness.bubblecombat.multiplay.commobjects.EventMessageObject;
 
 public class MultiplayManager implements Closeable {
 
@@ -33,7 +37,7 @@ public class MultiplayManager implements Closeable {
 
 	private static int nextId = Settings.HOST_ID + 1;
 
-	private Handler handler = new Handler();
+	private Handler handler = new Handler(Looper.getMainLooper());
 
 	private List<MultiplayEventListener> listeners = new ArrayList<MultiplayEventListener>();
 
@@ -42,7 +46,8 @@ public class MultiplayManager implements Closeable {
 	private MultiplayStrategy strategy;
 
 	private Context context;
-
+	
+	
 	private class DeviceReceiver extends BroadcastReceiver {
 
 		@Override
@@ -68,6 +73,18 @@ public class MultiplayManager implements Closeable {
 
 		broadcastReceiver = new DeviceReceiver();
 		context.registerReceiver(broadcastReceiver, filter);
+		
+	}
+
+	private void setupMock() {
+		handler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				strategy.add(new EventMessageObject((int) (Math.random() * 300), (int) (Math.random() * 300))); 
+				handler.postDelayed(this, 1000);
+			}
+		}, 1000);
 	}
 
 	protected void onDeviceDiscovered(BluetoothDevice device) {
@@ -89,8 +106,13 @@ public class MultiplayManager implements Closeable {
 							}
 						}
 					}, this);
+			onStrategySet();
 			strategy.start();
 		}
+	}
+
+	private void onStrategySet() {
+		setupMock();
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {
@@ -112,6 +134,7 @@ public class MultiplayManager implements Closeable {
 		BluetoothServerSocket serverSocket = adapter
 				.listenUsingInsecureRfcommWithServiceRecord(NAME, UUID);
 		this.strategy = new HostStrategy(context, serverSocket, this);
+		onStrategySet();
 		this.strategy.start();
 	}
 
@@ -150,9 +173,6 @@ public class MultiplayManager implements Closeable {
 		}
 	}
 
-	public void sendAllPlayersGO() {
-	}
-
 	public List<Integer> getPlayerIds() {
 		return new ArrayList<Integer>(strategy.getConnectedPlayers().keySet());
 	}
@@ -167,8 +187,15 @@ public class MultiplayManager implements Closeable {
 	}
 
 	public void onGameCommenced(final long syncStamp) {
+		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+		
 		for (MultiplayEventListener listener : listeners) {
 			listener.onGameCommenced(syncStamp);
 		}
+		
+	}
+
+	public void action() {
+		strategy.action();
 	}
 }

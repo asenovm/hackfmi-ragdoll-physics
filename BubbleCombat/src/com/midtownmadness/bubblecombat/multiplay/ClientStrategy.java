@@ -16,18 +16,13 @@ public class ClientStrategy extends BaseStrategy {
 
 	private BluetoothDevice device;
 
-	private BluetoothSocket hostSocket;
-
 	private Callback<BluetoothSocket> callback;
-
-	private MultiplayManager manager;
 
 	public ClientStrategy(Context context, BluetoothDevice device,
 			Callback<BluetoothSocket> callback, MultiplayManager manager) {
-		super(context);
+		super(context, manager);
 		this.device = device;
 		this.callback = callback;
-		this.manager = manager;
 
 	}
 
@@ -38,14 +33,14 @@ public class ClientStrategy extends BaseStrategy {
 			@Override
 			public void run() {
 				try {
-					hostSocket = device
+					otherPlayer = device
 							.createInsecureRfcommSocketToServiceRecord(MultiplayManager.UUID);
-					toast("Host socket found " + hostSocket.toString());
+					toast("Host socket found " + otherPlayer.toString());
 
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
-					callback.call(hostSocket);
+					callback.call(otherPlayer);
 				}
 			}
 		});
@@ -60,10 +55,10 @@ public class ClientStrategy extends BaseStrategy {
 	public void close() {
 		toast("close");
 		try {
-			if (hostSocket != null) {
-				hostSocket.getInputStream().close();
-				hostSocket.getOutputStream().close();
-				hostSocket.close();
+			if (otherPlayer != null) {
+				otherPlayer.getInputStream().close();
+				otherPlayer.getOutputStream().close();
+				otherPlayer.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -77,17 +72,17 @@ public class ClientStrategy extends BaseStrategy {
 			@Override
 			public void run() {
 				try {
-					hostSocket.connect();
+					otherPlayer.connect();
 				} catch (IOException e) {
 					toast("Network error");
 					e.printStackTrace();
 				}
-				onPlayerConnected(HOST_ID, hostSocket);
+				onPlayerConnected(HOST_ID, otherPlayer);
 
 				sendEmptyMessage(MessageType.JOIN_GAME, getConnectedPlayers()
 						.get(Settings.HOST_ID));
 
-				final BluetoothMessage response = obtainMessage(hostSocket);
+				final BluetoothMessage response = obtainMessage(otherPlayer);
 				if (response.messageType == MessageType.GO) {
 					final GoMessageObject meta = (GoMessageObject) response.payload;
 					manager.onGameCommenced(meta.timestamp);

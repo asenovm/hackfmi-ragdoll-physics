@@ -22,4 +22,6 @@ public class Settings {
 
 	 */
 	public static final String EXTRA_SYNC_STAMP = "syncStamp";
+
+	public static final int EVENTS_BUFFER_SIZE = 200;
 }
