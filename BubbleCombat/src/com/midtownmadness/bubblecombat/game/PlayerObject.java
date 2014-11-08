@@ -27,9 +27,11 @@ public class PlayerObject extends GameObject {
 	private RectF boundingBox;
 	private Bitmap bitmap;
 	private Rect bitmapBounds;
+	private int playerId;
 	
-	public PlayerObject(Vec2 initialPosition, Bitmap bitmap)
+	public PlayerObject(Vec2 initialPosition, Bitmap bitmap, int playerId)
 	{
+		this.playerId = playerId;
 		paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(getRandomColor());
@@ -96,5 +98,9 @@ public class PlayerObject extends GameObject {
 
 	public float getHealth() {
 		return health;
+	}
+	
+	public int getPlayerId() {
+		return playerId;
 	}
 }
