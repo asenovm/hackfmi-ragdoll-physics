@@ -21,7 +21,7 @@ public class MenuGameView extends LinearLayout {
 
 	public static class SimpleGameRoomListener implements GameRoomListener {
 		@Override
-		public void onGameEntered(MultiplayerGame model) {
+		public void onGameSelected(MultiplayerGame model) {
 			// blank
 		}
 	}
@@ -30,7 +30,7 @@ public class MenuGameView extends LinearLayout {
 		@Override
 		public void onClick(View v) {
 			if (listener != null) {
-				listener.onGameEntered(model);
+				listener.onGameSelected(model);
 			}
 		}
 	}

@@ -1,10 +1,9 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -15,22 +14,36 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
 
-public class MultiplayManager {
+public class MultiplayManager implements Closeable {
+
 	public static final String SERVICE_NAME = MultiplayManager.class
 			.getSimpleName();
+
 	private static final String NAME = Settings.GAME_NAME;
+
 	static final UUID UUID = java.util.UUID
 			.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+
 	private static final String TAG = MultiplayManager.class.getSimpleName();
-	private static int nextId = Settings.HOST_ID;
+
+	private static int nextId = Settings.HOST_ID + 1;
+
+	private Handler handler = new Handler();
 
 	private List<MultiplayEventListener> listeners = new ArrayList<MultiplayEventListener>();
-	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+	private BroadcastReceiver broadcastReceiver;
+
+	private MultiplayStrategy strategy;
+
+	private Context context;
+
+	private class DeviceReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -43,35 +56,41 @@ public class MultiplayManager {
 			}
 			Log.e(TAG, "ON RECEIVE!");
 		}
-	};
 
-	private MultiplayStrategy strategy;
+	}
 
 	public MultiplayManager(Context context) {
 		// log by default>
+		this.context = context;
 		this.listeners.add(new LoggingListener());
 
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+
+		broadcastReceiver = new DeviceReceiver();
 		context.registerReceiver(broadcastReceiver, filter);
 	}
 
 	protected void onDeviceDiscovered(BluetoothDevice device) {
 		// XXX this should maybe not be part of ClientStrategy?
-		ClientStrategy strategy = new ClientStrategy(device,
-				new Callback<BluetoothSocket>() {
+		// XXX move this to a List<ClientStrategy>, when you see multiple hosts
+		// XXX this for the moment allows us to see no more than one bluetooth
+		// game - the first one
+		// TODO generalize
+		if (strategy == null) {
+			this.strategy = new ClientStrategy(context, device,
+					new Callback<BluetoothSocket>() {
 
-					@Override
-					public void call(BluetoothSocket argument) {
-						if (argument == null) {
-							Log.e(TAG, "Socket receive failure");
-						} else {
-							onGameDiscovered(argument);
+						@Override
+						public void call(BluetoothSocket argument) {
+							if (argument == null) {
+								Log.e(TAG, "Socket receive failure");
+							} else {
+								onGameDiscovered(argument);
+							}
 						}
-					}
-				});
-
-		strategy.start();
-
+					}, this);
+			strategy.start();
+		}
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {
@@ -88,17 +107,23 @@ public class MultiplayManager {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		BluetoothServerSocket serverSocket = adapter
 				.listenUsingInsecureRfcommWithServiceRecord(NAME, UUID);
-		this.strategy = new HostStrategy(serverSocket, null);
+		this.strategy = new HostStrategy(context, serverSocket, this);
 		this.strategy.start();
 	}
 
-	public void searchForGames() {
+	public void joinGame() {
+		strategy.commenceGame();
+	}
+
+	public void searchForGames(final int timeoutMillis) {
+
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		adapter.startDiscovery();
+
 	}
 
 	void onPlayerConnected(BluetoothSocket socket) {
-		connectPlayers.put(nextId, socket);
+		strategy.onPlayerConnected(nextId, socket);
 
 		for (MultiplayEventListener listener : listeners) {
 			listener.onPlayerConnected(nextId);
@@ -107,25 +132,39 @@ public class MultiplayManager {
 		nextId++;
 	}
 
-	public void sendMessage(Object payload, MessageType type, int... playerIds) {
-		byte[] message = BluetoothMessage.from(type, payload);
+	public void removeListener(MultiplayEventListener menuActivity) {
+		listeners.remove(menuActivity);
+	}
 
-		for (int playerId : playerIds) {
-			BluetoothSocket connectedPlayer = connectPlayers.get(playerId);
-			if (connectedPlayer == null) {
-				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
-						+ playerId + " => NOT PRESENT IN MULTIPLAY MANAGER!");
-				continue;
-			}
-
-			try {
-				connectedPlayer.getOutputStream().write(message);
-				connectedPlayer.getOutputStream().flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+	public void close() {
+		if (broadcastReceiver != null) {
+			context.unregisterReceiver(broadcastReceiver);
+			broadcastReceiver = null;
+		}
+		if (strategy != null) {
+			strategy.close();
 		}
 	}
 
+	public void sendAllPlayersGO() {
+	}
+
+	public List<Integer> getPlayerIds() {
+		return new ArrayList<Integer>(strategy.getConnectedPlayers().keySet());
+	}
+
+	/**
+	 * XXXX REMOVE THIS METHOD USE getPlayers()[0]
+	 * 
+	 * @return
+	 */
+	public int getPlayerId() {
+		return getPlayerIds().get(0);
+	}
+
+	public void onGameCommenced() {
+		for (MultiplayEventListener listener : listeners) {
+			listener.onGameCommence();
+		}
+	}
 }

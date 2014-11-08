@@ -4,19 +4,36 @@ import android.bluetooth.BluetoothSocket;
 
 public class MultiplayerGame {
 
-	private BluetoothSocket socket;
+	// TODO synchronization!!!
+	// XXX
+	// change this to list!
+	private BluetoothSocket otherPlayer;
+
+	private long syncTimestamp;
 
 	public MultiplayerGame(BluetoothSocket clientSocket) {
-		this.socket = clientSocket;
+		this.otherPlayer = clientSocket;
 	}
-	
-	public String getName(){
-		return socket.getRemoteDevice().getName();
+
+	public String getName() {
+		return otherPlayer.getRemoteDevice().getName();
 	}
-	
+
 	@Override
 	public String toString() {
-		return socket.getRemoteDevice().getAddress();
+		return otherPlayer.getRemoteDevice().getAddress();
+	}
+
+	public void setSyncTimestamp(long syncTimestamp) {
+		this.syncTimestamp = syncTimestamp;
+	}
+
+	public long getSyncTimestamp() {
+		return syncTimestamp;
+	}
+
+	public BluetoothSocket getPlayerSocket() {
+		return otherPlayer;
 	}
 
 }

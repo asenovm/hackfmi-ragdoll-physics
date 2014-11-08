@@ -1,9 +1,22 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import java.util.Map;
+
+import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 
 public interface MultiplayStrategy {
-	public void handshakeAndLoad();
-	public Handler getHandler();
-	public void start();
+	void handshakeAndLoad();
+
+	Handler getHandler();
+
+	void start();
+
+	void commenceGame();
+
+	void onPlayerConnected(final int playerId, final BluetoothSocket socket);
+
+	void close();
+
+	public Map<Integer, BluetoothSocket> getConnectedPlayers();
 }

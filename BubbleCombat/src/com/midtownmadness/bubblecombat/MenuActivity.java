@@ -21,7 +21,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		MultiplayEventListener, GameRoomListener {
 
 	private static final int REQUEST_CODE_BLUETOOTH_VISIBILITY = 0xFACE;
+
 	private MultiplayManager multiplayManager;
+
 	private BluetoothGamesAdapter gameAdapter;
 
 	@Override
@@ -36,7 +38,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Assert.assertNotNull(multiplayManager);
 
 		multiplayManager.addListener(this);
-		multiplayManager.searchForGames();
+		multiplayManager.searchForGames(5000);
 	}
 
 	@Override
@@ -74,10 +76,6 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		final Intent playIntent = new Intent(getApplicationContext(),
 				GameActivity.class);
 		startActivity(playIntent);
-	}
-
-	private void toast(String string) {
-		Toast.makeText(this, string, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -118,6 +116,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 
 	private void doHost() {
 		try {
+			toast("Hosting game ");
 			multiplayManager.host();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -126,10 +125,40 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onGameEntered(MultiplayerGame model) {
-		Toast.makeText(this, "attempted to enter " + model.toString(),
+	public void onGameSelected(MultiplayerGame model) {
+		Toast.makeText(this, "Game connected " + model.toString(),
 				Toast.LENGTH_SHORT).show();
 
+		multiplayManager.joinGame();
+	}
+
+	@Override
+	public void onGameSynced(MultiplayerGame game) {
+
+	}
+
+	@Override
+	public void finish() {
+		super.onGameClose();
+		super.finish();
+	}
+
+	@Override
+	public void onGameCommence() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				final Intent gameIntent = new Intent(getApplicationContext(),
+						GameActivity.class);
+				startActivity(gameIntent);
+			}
+		});
+	}
+
+	@Override
+	public void onError() {
+		toast(R.string.error_text);
+		finish();
 	}
 
 }

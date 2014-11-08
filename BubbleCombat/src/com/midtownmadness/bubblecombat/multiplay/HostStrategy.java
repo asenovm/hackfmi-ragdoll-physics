@@ -2,38 +2,48 @@ package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
 
-import com.midtownmadness.bubblecombat.Settings;
-
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.graphics.Paint.Join;
 import android.util.Log;
 
+import com.midtownmadness.bubblecombat.Settings;
+
 public class HostStrategy extends BaseStrategy {
+
 	protected static final String TAG = HostStrategy.class.getSimpleName();
 	private BluetoothServerSocket serverSocket;
 	private MultiplayManager manager;
+	private BluetoothSocket otherPlayer;
+	private Object monitor = new Object();
+	private boolean goCommandGiven;
 
-	public HostStrategy(BluetoothServerSocket serverSocket,
+	public HostStrategy(Context context, BluetoothServerSocket serverSocket,
 			MultiplayManager manager) {
-		super();
+		super(context);
 		this.serverSocket = serverSocket;
 		this.manager = manager;
 	}
 
 	@Override
 	public void handshakeAndLoad() {
-
-	}
-
-	private void doHost() {
 		getHandler().post(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					BluetoothSocket socket = serverSocket
-							.accept(Settings.HOST_TIMEOUT);
-					manager.onPlayerConnected(socket);
+					otherPlayer = serverSocket.accept(Settings.HOST_TIMEOUT);
+					toast("Accepted client socket " + otherPlayer.toString());
+
+					// please don't do ugly stuff with my 'otherPlayer' field
+					manager.onPlayerConnected(otherPlayer);
+
+					BluetoothMessage message = obtainMessage(otherPlayer);
+
+					if (message.messageType == MessageType.JOIN_GAME) {
+						commenceGame();
+					}
 
 				} catch (IOException e) {
 					// timeout
@@ -47,7 +57,43 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void onLooperReady() {
-		doHost();
+		handshakeAndLoad();
+	}
+
+	@Override
+	public void close() {
+		toast("close");
+		try {
+			if (otherPlayer != null) {
+				otherPlayer.getInputStream().close();
+				otherPlayer.getOutputStream().close();
+				otherPlayer.close();
+			}
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void commenceGame() {
+		getHandler().post(new Runnable() {
+
+			@Override
+			public void run() {
+				toast("Player " + otherPlayer.getRemoteDevice().getName()
+						+ "has joined!");
+
+				sendGoMessage();
+				manager.onGameCommenced();
+
+			}
+		});
+	}
+
+	private void sendGoMessage() {
+		MessageType type = MessageType.GO;
+		sendEmptyMessage(type, otherPlayer);
 	}
 
 }
