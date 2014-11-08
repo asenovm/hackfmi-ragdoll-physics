@@ -1,11 +1,12 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import static com.midtownmadness.bubblecombat.Settings.CLIENT_ID;
+import static com.midtownmadness.bubblecombat.Settings.HOST_ID;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -46,8 +47,7 @@ public class MultiplayManager implements Closeable {
 	private MultiplayStrategy strategy;
 
 	private Context context;
-	
-	
+
 	private class DeviceReceiver extends BroadcastReceiver {
 
 		@Override
@@ -73,15 +73,17 @@ public class MultiplayManager implements Closeable {
 
 		broadcastReceiver = new DeviceReceiver();
 		context.registerReceiver(broadcastReceiver, filter);
-		
+
 	}
 
 	private void setupMock() {
 		handler.postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				strategy.add(new EventMessageObject((int) (Math.random() * 300), (int) (Math.random() * 300))); 
+				strategy.add(new EventMessageObject(
+						(int) (Math.random() * 300),
+						(int) (Math.random() * 300)));
 				handler.postDelayed(this, 1000);
 			}
 		}, 1000);
@@ -177,22 +179,22 @@ public class MultiplayManager implements Closeable {
 		return new ArrayList<Integer>(strategy.getConnectedPlayers().keySet());
 	}
 
-	/**
-	 * XXXX REMOVE THIS METHOD USE getPlayers()[0]
-	 * 
-	 * @return
-	 */
-	public int getPlayerId() {
+	public int getOtherPlayerId() {
 		return getPlayerIds().get(0);
+	}
+
+	public int getMyPlayerId() {
+		final int otherPlayerId = getOtherPlayerId();
+		return otherPlayerId == HOST_ID ? CLIENT_ID : HOST_ID;
 	}
 
 	public void onGameCommenced(final long syncStamp) {
 		BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
-		
+
 		for (MultiplayEventListener listener : listeners) {
 			listener.onGameCommenced(syncStamp);
 		}
-		
+
 	}
 
 	public void action() {

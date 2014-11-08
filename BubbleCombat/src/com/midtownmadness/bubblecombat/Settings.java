@@ -18,6 +18,11 @@ public class Settings {
 	public static final int HOST_ID = 0;
 
 	/**
+	 * {@value}
+	 */
+	public static final int CLIENT_ID = 1;
+
+	/**
 	 * {@value]
 
 	 */
