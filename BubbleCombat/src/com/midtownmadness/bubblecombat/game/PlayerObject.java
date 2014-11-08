@@ -8,9 +8,11 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class PlayerObject extends GameObject {
@@ -23,8 +25,10 @@ public class PlayerObject extends GameObject {
 	protected float health;
 	private Vec2 initialPosition;
 	private RectF boundingBox;
+	private Bitmap bitmap;
+	private Rect bitmapBounds;
 	
-	public PlayerObject(Vec2 initialPosition)
+	public PlayerObject(Vec2 initialPosition, Bitmap bitmap)
 	{
 		paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
@@ -38,6 +42,8 @@ public class PlayerObject extends GameObject {
 		
 		health = MAX_HEALTH;
 		boundingBox = new RectF();
+		this.bitmap = bitmap;
+		bitmapBounds = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 	}
 	
 	private int getRandomColor()
@@ -55,9 +61,9 @@ public class PlayerObject extends GameObject {
 		if (body != null)
 		{
 			Vec2 position = body.getPosition();
-			canvas.drawCircle(position.x, position.y, radius, paint);
-			
 			boundingBox.set(position.x - radius, position.y - radius, position.x + radius, position.y + radius);
+			canvas.drawBitmap(bitmap, bitmapBounds, boundingBox, null);
+			
 			canvas.drawArc(boundingBox, 0, (float) (2 * 180 * (health / MAX_HEALTH)), false, healthBarPaint);
 		}
 	}

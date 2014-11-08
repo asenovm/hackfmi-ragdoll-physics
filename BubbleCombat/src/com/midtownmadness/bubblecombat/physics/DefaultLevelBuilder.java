@@ -28,7 +28,7 @@ public class DefaultLevelBuilder extends LevelBuilder {
 		LevelObject levelObject = new LevelObject();
 		
 		// Level size
-		levelObject.size = new PointF(130, 100);
+		levelObject.size = new PointF(167, 100);
 		
 		// Walls
 		List<GameWallObject> walls = Arrays.asList(
@@ -50,8 +50,9 @@ public class DefaultLevelBuilder extends LevelBuilder {
 		}
 		
 		// Player
+		int currentPlayerId = 0;
 		Vec2 position = new Vec2(50, 50);
-		levelObject.setThisPlayer(buildPlayer(position, levelObject, physicsService));
+		levelObject.setThisPlayer(buildPlayer(position, levelObject, physicsService, currentPlayerId, resources));
 		
 		// Background
 		levelObject.background = BitmapFactory.decodeResource(resources, R.drawable.background);
@@ -59,8 +60,9 @@ public class DefaultLevelBuilder extends LevelBuilder {
 		return levelObject;
 	}
 
-	private PlayerObject buildPlayer(Vec2 position, LevelObject levelObject, PhysicsService physicsService) {
-		final PlayerObject player = new PlayerObject(position);
+	private PlayerObject buildPlayer(Vec2 position, LevelObject levelObject, PhysicsService physicsService, int playerId, Resources resources) {
+		Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.character1);
+		final PlayerObject player = new PlayerObject(position, bitmap);
 		levelObject.objects.add(player);
 		physicsService.createBody(new BodyCreationRequest(player.buildBodyDef(), player.buildFixtureDef(), new Callback<BodyCreationRequest>() {
 			
