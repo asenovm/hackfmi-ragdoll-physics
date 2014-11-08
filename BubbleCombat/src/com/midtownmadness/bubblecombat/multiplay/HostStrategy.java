@@ -51,6 +51,11 @@ public class HostStrategy extends BaseStrategy {
 	@Override
 	public void close() {
 		try {
+			if (otherPlayer != null) {
+				otherPlayer.getInputStream().close();
+				otherPlayer.getOutputStream().close();
+				otherPlayer.close();
+			}
 			serverSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();

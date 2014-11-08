@@ -3,24 +3,19 @@ package com.midtownmadness.bubblecombat;
 import java.io.IOException;
 
 import junit.framework.Assert;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.midtownmadness.bubblecombar.listeners.GameRoomListener;
-import com.midtownmadness.bubblecombar.model.GamesAdapter;
-import com.midtownmadness.bubblecombat.multiplay.Callback;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEventListener;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
 import com.midtownmadness.bubblecombat.views.MenuView;
-
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.InputFilter.LengthFilter;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Toast;
 
 public class MenuActivity extends BaseActivity implements OnClickListener,
 		MultiplayEventListener, GameRoomListener {
@@ -53,6 +48,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		case R.id.quit_button:
 			finish();
 			break;
+		case R.id.play_button:
+			play();
+			break;
 
 		default:
 			break;
@@ -70,6 +68,12 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 			toast("hosting fucked up");
 			e.printStackTrace();
 		}
+	}
+
+	private void play() {
+		final Intent playIntent = new Intent(getApplicationContext(),
+				GameActivity.class);
+		startActivity(playIntent);
 	}
 
 	private void toast(String string) {
@@ -114,6 +118,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 
 	private void doHost() {
 		try {
+			toast("Hosting game ");
 			multiplayManager.host();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -123,19 +128,31 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 
 	@Override
 	public void onGameEntered(MultiplayerGame model) {
-		Toast.makeText(this, "Game connected " + model.toString(), Toast.LENGTH_SHORT).show();
-		
-		//just preventing some memory leaks : )
+		Toast.makeText(this, "Game connected " + model.toString(),
+				Toast.LENGTH_SHORT).show();
+
+		// just preventing some memory leaks : )
 		multiplayManager.removeListener(this);
-		
+
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent, null);
+		finish();
 	}
 
 	@Override
 	public void onGameSynced(MultiplayerGame game) {
-		
+
 	}
 	
+	@Override
+	public void finish() {
+		super.onGameClose();
+		super.finish();
+	}
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
+	}
 
 }

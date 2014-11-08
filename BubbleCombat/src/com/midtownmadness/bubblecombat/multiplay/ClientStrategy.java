@@ -45,7 +45,11 @@ public class ClientStrategy extends BaseStrategy {
 	@Override
 	public void close() {
 		try {
-			hostSocket.close();
+			if (hostSocket != null) {
+				hostSocket.getInputStream().close();
+				hostSocket.getOutputStream().close();
+				hostSocket.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

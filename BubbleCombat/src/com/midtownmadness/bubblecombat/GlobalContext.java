@@ -5,7 +5,7 @@ import com.midtownmadness.bubblecombat.physics.PhysicsService;
 
 import android.app.Application;
 
-public class GlobalContext extends Application implements LifecycleListener {
+public class GlobalContext extends Application {
 	private MultiplayManager multiplayManager;
 	private PhysicsService physicsService;
 
@@ -25,8 +25,7 @@ public class GlobalContext extends Application implements LifecycleListener {
 		return super.getSystemService(name);
 	}
 
-	@Override
-	public void onDestroy() {
+	public void onGameClose() {
 		multiplayManager.close();
 	}
 }

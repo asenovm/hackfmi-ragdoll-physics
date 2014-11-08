@@ -6,17 +6,16 @@ public class BaseActivity extends Activity {
 	@Override
 	public Object getSystemService(String name) {
 		Object normalSystemService = super.getSystemService(name);
-		if (normalSystemService!=null){
+		if (normalSystemService != null) {
 			return normalSystemService;
 		}
-		
-		Object ourSystemService = getApplicationContext().getSystemService(name);
+
+		Object ourSystemService = getApplicationContext()
+				.getSystemService(name);
 		return ourSystemService;
 	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		((GlobalContext) getApplicationContext()).onDestroy();
+
+	protected void onGameClose() {
+		((GlobalContext) getApplicationContext()).onGameClose();
 	}
 }

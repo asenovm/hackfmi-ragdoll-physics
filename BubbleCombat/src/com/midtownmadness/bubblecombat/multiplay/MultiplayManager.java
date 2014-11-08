@@ -36,7 +36,8 @@ public class MultiplayManager implements Closeable {
 
 	private List<MultiplayEventListener> listeners = new ArrayList<MultiplayEventListener>();
 	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
-	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+
+	private class DeviceReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -49,8 +50,10 @@ public class MultiplayManager implements Closeable {
 			}
 			Log.e(TAG, "ON RECEIVE!");
 		}
-	};
 
+	}
+
+	private BroadcastReceiver broadcastReceiver;
 	private MultiplayStrategy strategy;
 	private Context context;
 
@@ -60,6 +63,8 @@ public class MultiplayManager implements Closeable {
 		this.listeners.add(new LoggingListener());
 
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		
+		broadcastReceiver = new DeviceReceiver();
 		context.registerReceiver(broadcastReceiver, filter);
 	}
 
@@ -117,7 +122,7 @@ public class MultiplayManager implements Closeable {
 			}
 		};
 		searchForGamesRunnable.run();
-		
+
 		handler.postDelayed(new Runnable() {
 
 			@Override
@@ -168,7 +173,10 @@ public class MultiplayManager implements Closeable {
 	}
 
 	public void close() {
-		context.unregisterReceiver(broadcastReceiver);
+		if (broadcastReceiver != null) {
+			context.unregisterReceiver(broadcastReceiver);
+			broadcastReceiver = null;
+		}
 		if (strategy != null) {
 			strategy.close();
 		}
