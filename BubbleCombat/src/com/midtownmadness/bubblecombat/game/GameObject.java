@@ -1,18 +1,15 @@
-package com.midtownmadness.bubblecombat;
+package com.midtownmadness.bubblecombat.game;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.FixtureDef;
 
 import android.graphics.Canvas;
 
-public class GameObject {
+public abstract class GameObject {
 	protected static int staticId = 0;
 	protected int id; 
-	protected Vec2 position;
-	protected Vec2 velocity;
-	protected float mass;
+	protected Body body;
 	
 	public GameObject()
 	{
@@ -21,7 +18,6 @@ public class GameObject {
 	
 	public void render(Canvas canvas)
 	{
-		
 	}
 	
 	public BodyDef buildBodyDef() {
@@ -33,6 +29,6 @@ public class GameObject {
 	}
 	
 	public void setBody(Body body) {
-		
+		this.body = body;
 	}
 }
