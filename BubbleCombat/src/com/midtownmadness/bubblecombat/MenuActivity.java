@@ -153,8 +153,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 				final Intent gameIntent = new Intent(getApplicationContext(),
 						GameActivity.class);
 
-				final Bundle extras = new Bundle();
-				extras.putLong(EXTRA_SYNC_STAMP, syncStamp);
+				gameIntent.putExtra(EXTRA_SYNC_STAMP, syncStamp);
 				startActivity(gameIntent);
 			}
 		});
