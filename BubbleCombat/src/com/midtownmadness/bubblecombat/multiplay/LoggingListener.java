@@ -4,6 +4,9 @@ import android.util.Log;
 
 public class LoggingListener implements MultiplayEventListener {
 
+	/**
+	 * {@value}
+	 */
 	private static final String TAG = LoggingListener.class.getSimpleName();
 
 	@Override
@@ -24,6 +27,16 @@ public class LoggingListener implements MultiplayEventListener {
 	@Override
 	public void onGameSynced(MultiplayerGame game) {
 		Log.d(TAG, "Game synced! " + game.toString());
+	}
+
+	@Override
+	public void onGameCommence() {
+		Log.d(TAG, "on game commence ");
+	}
+
+	@Override
+	public void onError() {
+		Log.e(TAG, "error");
 	}
 
 }

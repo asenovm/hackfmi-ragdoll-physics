@@ -40,5 +40,6 @@
     <string name="message_too_fast">Too Fast</string>
     <string name="message_bad_angle">Bad Angle</string>
     <string name="title_activity_bluetooth_test">BluetoothTestActivity</string>
+    <string name="error_text">An unknown error has occurred</string>
 
 </resources>

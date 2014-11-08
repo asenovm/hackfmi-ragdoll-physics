@@ -12,7 +12,8 @@ public interface MultiplayStrategy {
 
 	void start();
 
-	void commenceGame(MultiplayerGame gamew);
+	void commenceGame(final MultiplayerGame game,
+			final MultiplayEventListener listener);
 
 	void onPlayerConnected(final int playerId, final BluetoothSocket socket);
 

@@ -111,8 +111,9 @@ public class MultiplayManager implements Closeable {
 		this.strategy.start();
 	}
 
-	public void joinGame(final MultiplayerGame game) {
-		strategy.commenceGame(game);
+	public void joinGame(final MultiplayerGame game,
+			final MultiplayEventListener listener) {
+		strategy.commenceGame(game, listener);
 	}
 
 	public void searchForGames(final int timeoutMillis) {

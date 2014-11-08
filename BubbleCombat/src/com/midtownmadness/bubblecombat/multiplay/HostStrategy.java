@@ -72,8 +72,10 @@ public class HostStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame(final MultiplayerGame game) {
+	public void commenceGame(final MultiplayerGame game,
+			final MultiplayEventListener listener) {
 		sendGoMessage(game);
+		listener.onGameCommence();
 	}
 
 	private void sendGoMessage(MultiplayerGame game) {
