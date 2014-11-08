@@ -17,18 +17,12 @@ import android.widget.Toast;
 
 public abstract class BaseStrategy implements MultiplayStrategy {
 
-	/**
-	 * {@value}
-	 */
 	private static final String TAG = BaseStrategy.class.getSimpleName();
-
 	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
-
 	private LooperThread looper;
-
 	protected Context context;
 	private Handler handler = new Handler(Looper.getMainLooper());
-
+	
 	public BaseStrategy(Context context) {
 		this.context = context;
 		this.looper = new LooperThread();

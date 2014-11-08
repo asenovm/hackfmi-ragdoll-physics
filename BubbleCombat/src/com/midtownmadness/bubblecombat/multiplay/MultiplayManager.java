@@ -165,6 +165,9 @@ public class MultiplayManager implements Closeable {
 		}
 	}
 
+	public void sendAllPlayersGO() {
+	}
+
 	public List<Integer> getPlayerIds() {
 		return new ArrayList<Integer>(strategy.getConnectedPlayers().keySet());
 	}

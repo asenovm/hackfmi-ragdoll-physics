@@ -15,6 +15,8 @@ public class HostStrategy extends BaseStrategy {
 	private BluetoothServerSocket serverSocket;
 	private MultiplayManager manager;
 	private BluetoothSocket otherPlayer;
+	private Object monitor = new Object();
+	private boolean goCommandGiven;
 
 	public HostStrategy(Context context, BluetoothServerSocket serverSocket,
 			MultiplayManager manager) {
@@ -73,12 +75,23 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void commenceGame(final MultiplayerGame game) {
+		BluetoothMessage message = obtainMessage(otherPlayer);
+		toast("Player " + otherPlayer.getRemoteDevice().getName()
+				+ "has joined!");
+
+		// await GO order
+		try {
+			while (goCommandGiven == false) {
+				monitor.wait();
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		sendGoMessage(game);
 	}
 
 	private void sendGoMessage(MultiplayerGame game) {
-		BluetoothSocket socket = game.getPlayerSocket();
-
 		MessageType type = MessageType.GO;
 		sendEmptyMessage(type);
 	}
