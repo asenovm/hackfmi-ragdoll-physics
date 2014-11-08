@@ -1,5 +1,7 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
+
 public interface MultiplayEventListener {
 	void onMultiplayEvent(MultiplayEvent e);
 
@@ -9,7 +11,7 @@ public interface MultiplayEventListener {
 
 	void onGameSynced(MultiplayerGame game);
 
-	void onGameCommence();
+	void onGameCommenced(final long syncStamp);
 
 	void onError();
 }

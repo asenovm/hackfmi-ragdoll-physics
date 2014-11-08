@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.graphics.Paint.Join;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
@@ -84,7 +85,6 @@ public class HostStrategy extends BaseStrategy {
 				toast("Player " + otherPlayer.getRemoteDevice().getName()
 						+ "has joined!");
 
-				sendGoMessage();
 				manager.onGameCommenced();
 
 			}

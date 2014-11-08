@@ -144,7 +144,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onGameCommence() {
+	public void onGameCommenced(final long syncStamp) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
+import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
 
 public class MultiplayManager implements Closeable {
 
@@ -162,9 +163,9 @@ public class MultiplayManager implements Closeable {
 		return getPlayerIds().get(0);
 	}
 
-	public void onGameCommenced() {
+	public void onGameCommenced(final long syncStamp) {
 		for (MultiplayEventListener listener : listeners) {
-			listener.onGameCommence();
+			listener.onGameCommenced(syncStamp);
 		}
 	}
 }

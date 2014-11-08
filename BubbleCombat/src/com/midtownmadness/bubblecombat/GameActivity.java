@@ -116,7 +116,7 @@ public class GameActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onGameCommence() {
+	public void onGameCommenced(final long syncStamp) {
 		// TODO relevant?
 	}
 
