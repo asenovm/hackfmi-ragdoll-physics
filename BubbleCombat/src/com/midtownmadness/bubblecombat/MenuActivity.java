@@ -80,8 +80,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onMultiplayEvent(MultiplayEvent e) {
-
+	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
 	}
 
 	@Override

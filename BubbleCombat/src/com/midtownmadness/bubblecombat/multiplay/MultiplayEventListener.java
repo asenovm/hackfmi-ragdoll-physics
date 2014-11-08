@@ -1,7 +1,7 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 public interface MultiplayEventListener {
-	void onMultiplayEvent(MultiplayEvent e);
+	void onMultiplayEvent(MultiplayEvent e, final int playerId);
 
 	void onPlayerConnected(int playerId);
 

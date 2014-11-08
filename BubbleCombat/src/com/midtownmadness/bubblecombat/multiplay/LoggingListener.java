@@ -10,7 +10,7 @@ public class LoggingListener implements MultiplayEventListener {
 	private static final String TAG = LoggingListener.class.getSimpleName();
 
 	@Override
-	public void onMultiplayEvent(MultiplayEvent e) {
+	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
 		Log.d(TAG, "Received multiplay event " + e.toString());
 	}
 

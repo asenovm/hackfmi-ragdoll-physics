@@ -44,10 +44,10 @@ import com.midtownmadness.bubblecombat.physics.PhysicsService;
 
 public class GameActivity extends BaseActivity implements
 		MultiplayEventListener, CollisionListener {
-	
+
 	private static final float MAX_VELOCITY = 400f;
 	private static final float MAX_DMG_ON_COLLISION = 5;
-	
+
 	private GameView gameView;
 	private PhysicsService physicsService;
 	private LevelObject level;
@@ -83,7 +83,7 @@ public class GameActivity extends BaseActivity implements
 
 		gameView = new GameView(this, level, physicsService);
 		setContentView(gameView);
-		
+
 		manager.action();
 	}
 
@@ -102,13 +102,13 @@ public class GameActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onMultiplayEvent(MultiplayEvent e) {
-
+	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
+		// blank as for now
 	}
 
 	@Override
 	public void onPlayerConnected(int playerId) {
-		
+
 	}
 
 	@Override
@@ -131,18 +131,18 @@ public class GameActivity extends BaseActivity implements
 		toast(R.string.error_text);
 		finish();
 	}
- 
+
 	@Override
 	public void collision(GameObject gameObj1, GameObject gameObj2,
 			Contact contact) {
 		playCollisionSound();
-		
+
 		PlayerObject thisPlayer = level.getThisPlayer();
-		if(gameObj1 == thisPlayer || gameObj2 == thisPlayer) {
+		if (gameObj1 == thisPlayer || gameObj2 == thisPlayer) {
 			float velocity = thisPlayer.getBody().getLinearVelocity().length();
 			float dmg = (velocity / MAX_VELOCITY) * MAX_DMG_ON_COLLISION;
 			thisPlayer.takeDamage(dmg);
-			if(thisPlayer.getHealth() == 0) {
+			if (thisPlayer.getHealth() == 0) {
 				endGame();
 			}
 		}
@@ -150,14 +150,14 @@ public class GameActivity extends BaseActivity implements
 
 	private void endGame() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void playCollisionSound() {
 		MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.collision);
 		mediaPlayer.start();
 		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-			
+
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mp.release();
