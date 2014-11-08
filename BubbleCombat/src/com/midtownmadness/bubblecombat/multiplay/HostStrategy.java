@@ -39,9 +39,10 @@ public class HostStrategy extends BaseStrategy {
 					// please don't do ugly stuff with my 'otherPlayer' field
 					manager.onPlayerConnected(otherPlayer);
 
-					while (true) {
-						BluetoothMessage message = obtainMessage(otherPlayer);
-						toast("message received" + message.toString());
+					BluetoothMessage message = obtainMessage(otherPlayer);
+
+					if (message.messageType == MessageType.JOIN_GAME) {
+						commenceGame();
 					}
 
 				} catch (IOException e) {
@@ -75,24 +76,24 @@ public class HostStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame(final MultiplayerGame game,
-			MultiplayEventListener listener) {
-		while (true) {
-			BluetoothMessage message = obtainMessage(otherPlayer);
-			if (message.messageType == MessageType.COMMENCE_GAME) {
-				break;
-			}
-		}
-		toast("Player " + otherPlayer.getRemoteDevice().getName()
-				+ "has joined!");
+	public void commenceGame() {
+		getHandler().post(new Runnable() {
 
-		sendGoMessage(game);
-		listener.onGameCommence();
+			@Override
+			public void run() {
+				toast("Player " + otherPlayer.getRemoteDevice().getName()
+						+ "has joined!");
+
+				sendGoMessage();
+				manager.onGameCommenced();
+
+			}
+		});
 	}
 
-	private void sendGoMessage(MultiplayerGame game) {
+	private void sendGoMessage() {
 		MessageType type = MessageType.GO;
-		sendEmptyMessage(type);
+		sendEmptyMessage(type, otherPlayer);
 	}
 
 }

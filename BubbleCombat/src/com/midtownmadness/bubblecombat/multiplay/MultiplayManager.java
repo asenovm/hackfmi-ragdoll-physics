@@ -88,7 +88,7 @@ public class MultiplayManager implements Closeable {
 								onGameDiscovered(argument);
 							}
 						}
-					});
+					}, this);
 			strategy.start();
 		}
 	}
@@ -111,34 +111,14 @@ public class MultiplayManager implements Closeable {
 		this.strategy.start();
 	}
 
-	public void joinGame(final MultiplayerGame game,
-			final MultiplayEventListener listener) {
-		strategy.commenceGame(game, listener);
+	public void joinGame() {
+		strategy.commenceGame();
 	}
 
 	public void searchForGames(final int timeoutMillis) {
 
-		final Runnable searchForGamesRunnable = new Runnable() {
-
-			@Override
-			public void run() {
-				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-				adapter.startDiscovery();
-			}
-		};
-		searchForGamesRunnable.run();
-
-		handler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				if (strategy == null) {
-					// we have not picked client strategy
-					searchForGamesRunnable.run();
-					handler.postDelayed(this, timeoutMillis);
-				}
-			}
-		}, timeoutMillis);
+		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+		adapter.startDiscovery();
 
 	}
 
@@ -180,5 +160,11 @@ public class MultiplayManager implements Closeable {
 	 */
 	public int getPlayerId() {
 		return getPlayerIds().get(0);
+	}
+
+	public void onGameCommenced() {
+		for (MultiplayEventListener listener : listeners) {
+			listener.onGameCommence();
+		}
 	}
 }

@@ -19,11 +19,14 @@ public class ClientStrategy extends BaseStrategy {
 
 	private Callback<BluetoothSocket> callback;
 
+	private MultiplayManager manager;
+
 	public ClientStrategy(Context context, BluetoothDevice device,
-			Callback<BluetoothSocket> callback) {
+			Callback<BluetoothSocket> callback, MultiplayManager manager) {
 		super(context);
 		this.device = device;
 		this.callback = callback;
+		this.manager = manager;
 
 	}
 
@@ -67,8 +70,7 @@ public class ClientStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame(final MultiplayerGame game,
-			final MultiplayEventListener listener) {
+	public void commenceGame() {
 		getHandler().post(new Runnable() {
 
 			@Override
@@ -81,14 +83,12 @@ public class ClientStrategy extends BaseStrategy {
 				}
 				onPlayerConnected(HOST_ID, hostSocket);
 
-				sendEmptyMessage(MessageType.COMMENCE_GAME,
-						getConnectedPlayers().get(Settings.HOST_ID));
+				sendEmptyMessage(MessageType.JOIN_GAME, getConnectedPlayers()
+						.get(Settings.HOST_ID));
 
 				final BluetoothMessage response = obtainMessage(hostSocket);
 				if (response.messageType == MessageType.GO) {
-					listener.onGameCommence();
-				} else {
-					listener.onError();
+					manager.onGameCommenced();
 				}
 			}
 		});

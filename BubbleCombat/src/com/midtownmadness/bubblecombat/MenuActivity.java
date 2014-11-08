@@ -129,7 +129,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Toast.makeText(this, "Game connected " + model.toString(),
 				Toast.LENGTH_SHORT).show();
 
-		multiplayManager.joinGame(model, this);
+		multiplayManager.joinGame();
 	}
 
 	@Override
@@ -144,12 +144,6 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		finish();
-	}
-
-	@Override
 	public void onGameCommence() {
 		runOnUiThread(new Runnable() {
 			@Override
@@ -157,7 +151,6 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 				final Intent gameIntent = new Intent(getApplicationContext(),
 						GameActivity.class);
 				startActivity(gameIntent);
-				finish();
 			}
 		});
 	}
