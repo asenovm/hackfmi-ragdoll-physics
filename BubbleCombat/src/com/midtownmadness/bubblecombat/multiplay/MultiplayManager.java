@@ -89,10 +89,8 @@ public class MultiplayManager implements Closeable {
 							}
 						}
 					});
-
 			strategy.start();
 		}
-
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {

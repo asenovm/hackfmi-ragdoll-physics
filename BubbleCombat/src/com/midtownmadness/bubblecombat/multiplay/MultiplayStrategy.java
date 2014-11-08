@@ -1,5 +1,7 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import java.io.Closeable;
+
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 

@@ -55,6 +55,11 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 		}
 	}
 
+	protected void sendEmptyMessage(MessageType type, int... playerIds) {
+		sendMessage(new String(), type, playerIds);
+	}
+
+	@Override
 	public void start() {
 		looper.start();
 	}
