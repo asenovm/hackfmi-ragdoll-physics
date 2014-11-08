@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
+import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
 
 public class HostStrategy extends BaseStrategy {
 
@@ -91,9 +92,12 @@ public class HostStrategy extends BaseStrategy {
 		});
 	}
 
-	private void sendGoMessage() {
+	private long sendGoMessage() {
 		MessageType type = MessageType.GO;
-		sendEmptyMessage(type, otherPlayer);
+		long baseTimestamp = SystemClock.uptimeMillis();
+		GoMessageObject payload  = new GoMessageObject(baseTimestamp);
+		sendMessage(payload, type, otherPlayer);
+		return baseTimestamp;
 	}
 
 }
