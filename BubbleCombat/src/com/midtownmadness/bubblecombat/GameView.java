@@ -22,6 +22,7 @@ import org.jbox2d.dynamics.Body;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -70,6 +71,33 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		physics.startService();
 		drawThread = new DrawThread(level, holder, physics);
 		drawThread.start();
+		
+		getHandler().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				syncState();
+				postDelayed(this, 100);
+			}
+
+		}, 100);
+	}
+
+	private void syncState() {
+		Body body = level.getThisPlayer().getBody();
+		Vec2 bodyPos = body.getPosition();
+		Vec2 linearVelocity = body.getLinearVelocity();
+		
+		MultiplayEvent mEvent = new MultiplayEvent();
+		mEvent.x = bodyPos.x;
+		mEvent.y = bodyPos.y;
+		mEvent.dx = 0;
+		mEvent.dy = 0;
+		mEvent.vx = linearVelocity.x;
+		mEvent.vy = linearVelocity.y;
+		mEvent.health = level.getThisPlayer().getHealth();
+		
+		manager.addEvent(mEvent);
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
@@ -79,6 +107,10 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		Vec2 dragVector;
+		Body body;
+		Vec2 linearVelocity;
+		Vec2 bodyPos;
+		MultiplayEvent mEvent;
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			startDragPosition.set(event.getRawX(), event.getRawY());
@@ -92,11 +124,11 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 					/ level.scale.x, (endDragPosition.y - startDragPosition.y)
 					/ level.scale.y);
 			
-			Body body = level.getThisPlayer().getBody();
-			Vec2 bodyPos = body.getPosition();
-			Vec2 linearVelocity = body.getLinearVelocity();
+			body = level.getThisPlayer().getBody();
+			bodyPos = body.getPosition();
+			linearVelocity = body.getLinearVelocity();
 			
-			MultiplayEvent mEvent = new MultiplayEvent();
+			mEvent = new MultiplayEvent();
 			mEvent.x = bodyPos.x;
 			mEvent.y = bodyPos.y;
 			mEvent.dx = dragVector.x;

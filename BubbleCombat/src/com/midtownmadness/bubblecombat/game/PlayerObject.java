@@ -89,6 +89,7 @@ public class PlayerObject extends GameObject {
 		def.position = initialPosition;
 		def.type = BodyType.DYNAMIC;
 		def.bullet = true;
+		def.fixedRotation = true;
 		return def;
 	}
 
@@ -102,5 +103,9 @@ public class PlayerObject extends GameObject {
 	
 	public int getPlayerId() {
 		return playerId;
+	}
+
+	public void setHealth(float health) {
+		this.health = health;
 	}
 }
