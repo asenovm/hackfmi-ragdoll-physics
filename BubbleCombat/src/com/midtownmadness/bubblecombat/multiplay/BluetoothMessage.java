@@ -17,6 +17,12 @@ public class BluetoothMessage {
 		this.payload = payload;
 	}
 
+	@Override
+	public String toString() {
+		return "BluetoothMessage [messageType=" + messageType + ", payload="
+				+ payload + "]";
+	}
+
 	public byte[] toBytes() {
 		ByteArrayOutputStream memoryStream = new ByteArrayOutputStream();
 		try {

@@ -135,9 +135,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 
 		multiplayManager.joinGame(model);
 
-		Intent intent = new Intent(this, GameActivity.class);
-		startActivity(intent, null);
-		finish();
+//		Intent intent = new Intent(this, GameActivity.class);
+//		startActivity(intent, null);
+//		finish();
 	}
 
 	@Override

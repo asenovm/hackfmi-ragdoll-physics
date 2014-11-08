@@ -1,6 +1,7 @@
 package com.midtownmadness.bubblecombat;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 

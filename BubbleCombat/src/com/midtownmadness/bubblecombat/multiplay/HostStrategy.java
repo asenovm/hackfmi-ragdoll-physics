@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
@@ -15,9 +16,9 @@ public class HostStrategy extends BaseStrategy {
 	private MultiplayManager manager;
 	private BluetoothSocket otherPlayer;
 
-	public HostStrategy(BluetoothServerSocket serverSocket,
+	public HostStrategy(Context context, BluetoothServerSocket serverSocket,
 			MultiplayManager manager) {
-		super();
+		super(context);
 		this.serverSocket = serverSocket;
 		this.manager = manager;
 	}
@@ -30,10 +31,15 @@ public class HostStrategy extends BaseStrategy {
 			public void run() {
 				try {
 					otherPlayer = serverSocket.accept(Settings.HOST_TIMEOUT);
+					toast("Accepted client socket " + otherPlayer.toString());
 
 					// please don't do ugly stuff with my 'otherPlayer' field
 					manager.onPlayerConnected(otherPlayer);
-					
+
+					while (true) {
+						BluetoothMessage message = obtainMessage(otherPlayer);
+						toast("message received" + message.toString());
+					}
 
 				} catch (IOException e) {
 					// timeout
@@ -52,6 +58,7 @@ public class HostStrategy extends BaseStrategy {
 
 	@Override
 	public void close() {
+		toast("close");
 		try {
 			if (otherPlayer != null) {
 				otherPlayer.getInputStream().close();

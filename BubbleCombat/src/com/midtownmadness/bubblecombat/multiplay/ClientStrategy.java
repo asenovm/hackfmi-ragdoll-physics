@@ -9,6 +9,7 @@ import com.midtownmadness.bubblecombat.Settings;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 
 public class ClientStrategy extends BaseStrategy {
 
@@ -18,9 +19,9 @@ public class ClientStrategy extends BaseStrategy {
 
 	private Callback<BluetoothSocket> callback;
 
-	public ClientStrategy(BluetoothDevice device,
+	public ClientStrategy(Context context, BluetoothDevice device,
 			Callback<BluetoothSocket> callback) {
-		super();
+		super(context);
 		this.device = device;
 		this.callback = callback;
 
@@ -35,6 +36,10 @@ public class ClientStrategy extends BaseStrategy {
 				try {
 					hostSocket = device
 							.createInsecureRfcommSocketToServiceRecord(MultiplayManager.UUID);
+					toast("Host socket found " + hostSocket.toString());
+					hostSocket.connect();
+					
+					toast("Host socket connected succesfully" + hostSocket.toString());
 					onPlayerConnected(HOST_ID, hostSocket);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -52,6 +57,7 @@ public class ClientStrategy extends BaseStrategy {
 
 	@Override
 	public void close() {
+		toast("close");
 		try {
 			if (hostSocket != null) {
 				hostSocket.getInputStream().close();
@@ -65,7 +71,8 @@ public class ClientStrategy extends BaseStrategy {
 
 	@Override
 	public void commenceGame(final MultiplayerGame game) {
-		sendEmptyMessage(MessageType.COMMENCE_GAME);
+		sendEmptyMessage(MessageType.COMMENCE_GAME, super.getConnectedPlayers()
+				.get(Settings.HOST_ID));
 	}
 
 }

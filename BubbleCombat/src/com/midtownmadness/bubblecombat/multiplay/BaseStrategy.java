@@ -1,14 +1,19 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 public abstract class BaseStrategy implements MultiplayStrategy {
 
@@ -21,7 +26,11 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 
 	private LooperThread looper;
 
-	public BaseStrategy() {
+	protected Context context;
+	private Handler handler = new Handler(Looper.getMainLooper());
+
+	public BaseStrategy(Context context) {
+		this.context = context;
 		this.looper = new LooperThread();
 		this.looper.setHandlerReadyListener(new Callback<Void>() {
 
@@ -39,7 +48,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	protected void sendMessage(Object payload, MessageType type,
 			BluetoothSocket... players) {
 		BluetoothMessage message = new BluetoothMessage(type, payload);
-
+		toast("Sending message" + message.toString());
 		for (BluetoothSocket playerSocket : players) {
 			if (players == null) {
 				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
@@ -51,6 +60,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 			try {
 				playerSocket.getOutputStream().write(message.toBytes());
 				playerSocket.getOutputStream().flush();
+				toast("Written to " + playerSocket.toString() + " and flushed");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -101,5 +111,16 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 			return message;
 		}
 
+	}
+
+	public void toast(final String text) {
+		handler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+
+			}
+		});
 	}
 }

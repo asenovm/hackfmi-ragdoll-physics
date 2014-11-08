@@ -77,7 +77,7 @@ public class MultiplayManager implements Closeable {
 		// game - the first one
 		// TODO generalize
 		if (strategy == null) {
-			this.strategy = new ClientStrategy(device,
+			this.strategy = new ClientStrategy(context, device,
 					new Callback<BluetoothSocket>() {
 
 						@Override
@@ -107,7 +107,7 @@ public class MultiplayManager implements Closeable {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		BluetoothServerSocket serverSocket = adapter
 				.listenUsingInsecureRfcommWithServiceRecord(NAME, UUID);
-		this.strategy = new HostStrategy(serverSocket, null);
+		this.strategy = new HostStrategy(context, serverSocket, this);
 		this.strategy.start();
 	}
 
