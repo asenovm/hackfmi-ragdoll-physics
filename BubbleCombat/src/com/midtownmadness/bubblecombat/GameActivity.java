@@ -67,7 +67,6 @@ public class GameActivity extends BaseActivity implements
 		setContentView(gameView);
 
 		load();
-		multiplayManager.startGameCommencePhase();
 
 	}
 
@@ -79,6 +78,7 @@ public class GameActivity extends BaseActivity implements
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/**
