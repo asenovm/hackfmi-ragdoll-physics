@@ -37,10 +37,10 @@ public class ClientStrategy extends BaseStrategy {
 					hostSocket = device
 							.createInsecureRfcommSocketToServiceRecord(MultiplayManager.UUID);
 					toast("Host socket found " + hostSocket.toString());
-					hostSocket.connect();
-					
-					toast("Host socket connected succesfully" + hostSocket.toString());
-					onPlayerConnected(HOST_ID, hostSocket);
+//					hostSocket.connect();
+//					
+//					toast("Host socket connected succesfully" + hostSocket.toString());
+//					onPlayerConnected(HOST_ID, hostSocket);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
@@ -71,6 +71,15 @@ public class ClientStrategy extends BaseStrategy {
 
 	@Override
 	public void commenceGame(final MultiplayerGame game) {
+		try {
+			hostSocket.connect();
+		} catch (IOException e) {
+			toast("Network error");
+			e.printStackTrace();
+		}
+		toast("Host socket connected succesfully" + hostSocket.toString());
+		onPlayerConnected(HOST_ID, hostSocket);
+
 		sendEmptyMessage(MessageType.COMMENCE_GAME, super.getConnectedPlayers()
 				.get(Settings.HOST_ID));
 	}

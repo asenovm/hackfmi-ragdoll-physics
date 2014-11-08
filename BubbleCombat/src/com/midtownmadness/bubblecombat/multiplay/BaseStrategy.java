@@ -118,7 +118,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 
 			@Override
 			public void run() {
-				Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 
 			}
 		});

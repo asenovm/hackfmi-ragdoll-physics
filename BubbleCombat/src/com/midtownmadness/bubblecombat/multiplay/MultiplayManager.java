@@ -177,33 +177,4 @@ public class MultiplayManager implements Closeable {
 	public int getPlayerId() {
 		return getPlayerIds().get(0);
 	}
-
-
-//	public void sendGoMessage(int... playerIds) {
-//		Object payload = null;
-//		for (int playerId : playerIds) {
-//			sendMessage(payload, MessageType.GO, playerId);
-//		}
-//	}
-//
-//	private void sendMessage(Object payload, MessageType type, int... playerIds) {
-//		byte[] message = BluetoothMessage.from(type, payload);
-//
-//		for (int playerId : playerIds) {
-//			BluetoothSocket connectedPlayer = connectPlayers.get(playerId);
-//			if (connectedPlayer == null) {
-//				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
-//						+ playerId + " => NOT PRESENT IN MULTIPLAY MANAGER!");
-//				continue;
-//			}
-//
-//			try {
-//				connectedPlayer.getOutputStream().write(message);
-//				connectedPlayer.getOutputStream().flush();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-
 }
