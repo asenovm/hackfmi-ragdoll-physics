@@ -38,8 +38,15 @@ public class DefaultLevelBuilder extends LevelBuilder {
 				new GameWallObject(new RectF(0, levelObject.size.y - GameWallObject.WALL_THICKNESS, levelObject.size.x, levelObject.size.y))
 				);
 		levelObject.objects = new ArrayList<GameObject>(walls);
-		for(GameWallObject wall : walls) {
-			physicsService.createBody(wall.buildBodyDef(), wall.buildFixtureDef());
+		for(final GameWallObject wall : walls) {
+			physicsService.createBody(new BodyCreationRequest(wall.buildBodyDef(), wall.buildFixtureDef(), new Callback<BodyCreationRequest>() {
+				
+				@Override
+				public void call(BodyCreationRequest argument) {
+					wall.setBody(argument.body);
+					wall.getBody().setUserData(new BodyUserData(wall));
+				}
+			}));
 		}
 		
 		// Player

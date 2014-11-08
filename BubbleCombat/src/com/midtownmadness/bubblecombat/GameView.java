@@ -69,7 +69,6 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		drawThread.stop = true;
-		physics.stop();
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class GameWallObject extends GameObject {
 
 		paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
-		paint.setColor(Color.WHITE);
+		paint.setColor(Color.BLACK);
 	}
 
 	@Override

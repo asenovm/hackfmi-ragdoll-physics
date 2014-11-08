@@ -17,25 +17,41 @@
 package com.midtownmadness.bubblecombat;
 
 import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
+
+import org.jbox2d.dynamics.contacts.Contact;
+
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 
+import com.midtownmadness.bubblecombat.game.GameObject;
 import com.midtownmadness.bubblecombat.game.LevelObject;
+import com.midtownmadness.bubblecombat.game.PlayerObject;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEventListener;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
+import com.midtownmadness.bubblecombat.physics.CollisionListener;
 import com.midtownmadness.bubblecombat.physics.DefaultLevelBuilder;
 import com.midtownmadness.bubblecombat.physics.LevelBuilder;
 import com.midtownmadness.bubblecombat.physics.PhysicsService;
 
 public class GameActivity extends BaseActivity implements
-		MultiplayEventListener {
+		MultiplayEventListener, CollisionListener {
+	
+	private static final float MAX_VELOCITY = 400f;
+	private static final float MAX_DMG_ON_COLLISION = 5;
+	
 	private GameView gameView;
 	private PhysicsService physicsService;
+	private LevelObject level;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +70,8 @@ public class GameActivity extends BaseActivity implements
 
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
 		physicsService = new PhysicsService();
-		LevelObject level = lbuilder.build(physicsService, getResources());
+		physicsService.setCollisionListener(this);
+		level = lbuilder.build(physicsService, getResources());
 
 		// get screen size
 		Display display = getWindowManager().getDefaultDisplay();
@@ -112,5 +129,37 @@ public class GameActivity extends BaseActivity implements
 		toast(R.string.error_text);
 		finish();
 	}
+ 
+	@Override
+	public void collision(GameObject gameObj1, GameObject gameObj2,
+			Contact contact) {
+		playCollisionSound();
+		
+		PlayerObject thisPlayer = level.getThisPlayer();
+		if(gameObj1 == thisPlayer || gameObj2 == thisPlayer) {
+			float velocity = thisPlayer.getBody().getLinearVelocity().length();
+			float dmg = (velocity / MAX_VELOCITY) * MAX_DMG_ON_COLLISION;
+			thisPlayer.takeDamage(dmg);
+			if(thisPlayer.getHealth() == 0) {
+				endGame();
+			}
+		}
+	}
 
+	private void endGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void playCollisionSound() {
+		MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.collision);
+		mediaPlayer.start();
+		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+			
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				mp.release();
+			}
+		});
+	}
 }
