@@ -16,49 +16,53 @@
 
 package com.midtownmadness.bubblecombat;
 
-import android.os.Bundle;
+import java.util.ArrayList;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.os.Bundle;
+import android.view.Display;
+
+import com.midtownmadness.bubblecombat.game.GameObject;
+import com.midtownmadness.bubblecombat.game.LevelObject;
+import com.midtownmadness.bubblecombat.game.PlayerObject;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 
-/**
- * This is a simple LunarLander activity that houses a single LunarView. It
- * demonstrates...
- * <ul>
- * <li>animating by calling invalidate() from draw()
- * <li>loading and drawing resources
- * <li>handling onPause() in an animation
- * </ul>
- */
+
 public class GameActivity extends BaseActivity {
+	private GameView gameView;
 
-	/** A handle to the View in which the game is running. */
-	private GameView mLunarView;
-
-	/**
-	 * Invoked during init to give the Activity a chance to set up its Menu.
-	 * 
-	 * @param menu
-	 *            the Menu to which entries may be added
-	 * @return true
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		
 		//Multiplayer reference example
 		MultiplayManager manager = (MultiplayManager) getSystemService(MultiplayManager.SERVICE_NAME);
 		if (manager == null){
 			throw new RuntimeException();
 		}
 		
-		// tell system to use the layout defined in our XML file
-		setContentView(R.layout.lunar_layout);
-
-		// get handles to the LunarView from XML, and its LunarThread
-		mLunarView = (GameView) findViewById(R.id.lunar);
-
-		// give the LunarView a handle to the TextView used for messages
+		//LevelBuilder lbuilder = new DefaultLevelBuilder();
+		//LevelObject level = lbuilder.build(null);
+		
+		LevelObject level = new LevelObject();
+		level.objects = new ArrayList<GameObject>();
+		level.objects.add(new PlayerObject());
+		level.size = new PointF(130, 100);
+		
+		// get screen size
+		Display display = getWindowManager().getDefaultDisplay();
+		Point screenSize = new Point();
+		display.getSize(screenSize);
+		
+		level.scale = new PointF();
+		level.scale.x = level.scale.y = screenSize.y / level.size.y;
+		
+		level.background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+		
+		gameView = new GameView(this, level);
+		setContentView(gameView);
 	}
 
 	/**
@@ -67,7 +71,6 @@ public class GameActivity extends BaseActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		// mLunarView.getThread().pause(); // pause game when Activity pauses
 	}
 	
 	@Override
@@ -76,11 +79,4 @@ public class GameActivity extends BaseActivity {
 		finish();
 	}
 
-	/**
-	 * Notification that something is about to happen, to give the Activity a
-	 * chance to save state.
-	 * 
-	 * @param outState
-	 *            a Bundle into which this Activity should save its state
-	 */
 }

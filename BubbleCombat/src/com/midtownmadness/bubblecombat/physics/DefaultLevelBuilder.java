@@ -6,12 +6,14 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import com.midtownmadness.bubblecombat.game.LevelObject;
+
 public class DefaultLevelBuilder extends LevelBuilder {
 
 	public static final Vec2 BOUNDING_BOX = new Vec2(100, 120);
 
 	@Override
-	public void build(PhysicsService physicsService) {
+	public LevelObject build(PhysicsService physicsService) {
 		physicsService.createBody(createWall(0, 0, 0),
 				createWallFixture(BOUNDING_BOX.x), null);
 
@@ -23,6 +25,8 @@ public class DefaultLevelBuilder extends LevelBuilder {
 
 		physicsService.createBody(createWall(BOUNDING_BOX.x, 0, -(float) (Math.PI / 2)),
 				createWallFixture(BOUNDING_BOX.y), null);
+		
+		return new LevelObject();
 	}
 
 	private BodyDef createWall(float x, float y, float angle) {
