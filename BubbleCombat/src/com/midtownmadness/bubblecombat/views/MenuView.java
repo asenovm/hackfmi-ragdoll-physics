@@ -15,7 +15,7 @@ import com.midtownmadness.bubblecombar.model.MockAdapter;
 import com.midtownmadness.bubblecombat.R;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
 
-public class MenuView extends LinearLayout implements GameRoomListener {
+public class MenuView extends LinearLayout{
 
 	/**
 	 * {@value}
@@ -44,7 +44,6 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		gamesListView.setEmptyView(findViewById(R.id.menu_list_empty_view));
 
 		gamesListView.setAdapter(adapter);
-		adapter.setGameRoomListener(this);
 
 	}
 
@@ -57,8 +56,4 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		this(context, null, 0, onClickListener, adapter);
 	}
 
-	@Override
-	public void onGameEntered(MultiplayerGame model) {
-		Log.i(TAG, "on game entered is called with model " + model.toString());
-	}
 }
