@@ -72,7 +72,6 @@ public class HostStrategy extends BaseStrategy {
 	private void sendGoMessage(MultiplayerGame game) {
 		BluetoothSocket socket = game.getPlayerSocket();
 
-		
 		MessageType type = MessageType.GO;
 		sendEmptyMessage(type);
 	}

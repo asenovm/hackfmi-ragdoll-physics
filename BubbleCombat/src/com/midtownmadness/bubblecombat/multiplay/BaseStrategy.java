@@ -9,7 +9,6 @@ import java.util.Map;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.util.Log;
-import android.util.SparseArray;
 
 public abstract class BaseStrategy implements MultiplayStrategy {
 
@@ -19,6 +18,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	private static final String TAG = BaseStrategy.class.getSimpleName();
 
 	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
+
 	private LooperThread looper;
 
 	public BaseStrategy() {

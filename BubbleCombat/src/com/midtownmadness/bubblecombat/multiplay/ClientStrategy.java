@@ -1,6 +1,11 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
+import static com.midtownmadness.bubblecombat.Settings.HOST_ID;
+
 import java.io.IOException;
+import java.net.ConnectException;
+
+import com.midtownmadness.bubblecombat.Settings;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -30,6 +35,7 @@ public class ClientStrategy extends BaseStrategy {
 				try {
 					hostSocket = device
 							.createInsecureRfcommSocketToServiceRecord(MultiplayManager.UUID);
+					onPlayerConnected(HOST_ID, hostSocket);
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {
