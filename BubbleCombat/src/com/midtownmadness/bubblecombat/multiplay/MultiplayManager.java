@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
-import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
 
 public class MultiplayManager implements Closeable {
 
@@ -104,6 +103,10 @@ public class MultiplayManager implements Closeable {
 		this.listeners.add(listener);
 	}
 
+	public void refresh() {
+		searchForGames();
+	}
+
 	public void host() throws IOException {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		BluetoothServerSocket serverSocket = adapter
@@ -116,11 +119,11 @@ public class MultiplayManager implements Closeable {
 		strategy.commenceGame();
 	}
 
-	public void searchForGames(final int timeoutMillis) {
-
+	public void searchForGames() {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-		adapter.startDiscovery();
-
+		if (!adapter.isDiscovering()) {
+			adapter.startDiscovery();
+		}
 	}
 
 	void onPlayerConnected(BluetoothSocket socket) {

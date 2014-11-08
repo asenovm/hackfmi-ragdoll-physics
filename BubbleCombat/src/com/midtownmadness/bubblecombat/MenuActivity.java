@@ -40,7 +40,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Assert.assertNotNull(multiplayManager);
 
 		multiplayManager.addListener(this);
-		multiplayManager.searchForGames(5000);
+		multiplayManager.searchForGames();
 	}
 
 	@Override
@@ -55,10 +55,16 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		case R.id.play_button:
 			play();
 			break;
-
+		case R.id.refresh_button:
+			refresh();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void refresh() {
+		multiplayManager.refresh();
 	}
 
 	private void host() {
