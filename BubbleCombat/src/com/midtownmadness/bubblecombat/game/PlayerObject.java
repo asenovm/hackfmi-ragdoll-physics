@@ -67,6 +67,7 @@ public class PlayerObject extends GameObject {
 		BodyDef def = new BodyDef();
 		def.position = initialPosition;
 		def.type = BodyType.DYNAMIC;
+		def.bullet = true;
 		return def;
 	}
 }

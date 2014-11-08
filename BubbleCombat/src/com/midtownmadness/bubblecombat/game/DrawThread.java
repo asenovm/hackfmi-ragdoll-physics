@@ -1,5 +1,7 @@
 package com.midtownmadness.bubblecombat.game;
 
+import com.midtownmadness.bubblecombat.physics.PhysicsService;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -9,11 +11,13 @@ public class DrawThread extends Thread {
 	private LevelObject level;
 	private SurfaceHolder holder;
 	public boolean stop = false;
+	private PhysicsService physics;
 
-	public DrawThread(LevelObject level, SurfaceHolder holder) {
+	public DrawThread(LevelObject level, SurfaceHolder holder, PhysicsService physics) {
 		super();
 		this.level = level;
 		this.holder = holder;
+		this.physics = physics;
 	}
 
 	@Override
@@ -23,6 +27,7 @@ public class DrawThread extends Thread {
 		backgroundDest.right = (int) level.size.x;
 		
 		while (!stop) {
+			physics.doPhysicsStep();
 			Canvas canvas = holder.lockCanvas();
 			if (canvas != null) {
 				long startTime = System.currentTimeMillis();
