@@ -32,7 +32,7 @@ public class HostStrategy extends BaseStrategy {
 
 					// please don't do ugly stuff with my 'otherPlayer' field
 					manager.onPlayerConnected(otherPlayer);
-					
+
 				} catch (IOException e) {
 					// timeout
 					e.printStackTrace();
@@ -63,9 +63,8 @@ public class HostStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame() {
-		// TODO Auto-generated method stub
-		
+	public void commenceGame(final MultiplayerGame game) {
+		// blank as for now
 	}
 
 }

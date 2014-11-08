@@ -21,7 +21,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		MultiplayEventListener, GameRoomListener {
 
 	private static final int REQUEST_CODE_BLUETOOTH_VISIBILITY = 0xFACE;
+
 	private MultiplayManager multiplayManager;
+
 	private BluetoothGamesAdapter gameAdapter;
 
 	@Override
@@ -131,8 +133,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Toast.makeText(this, "Game connected " + model.toString(),
 				Toast.LENGTH_SHORT).show();
 
-		// just preventing some memory leaks : )
-		multiplayManager.removeListener(this);
+		multiplayManager.joinGame(model);
 
 		Intent intent = new Intent(this, GameActivity.class);
 		startActivity(intent, null);
@@ -143,12 +144,13 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	public void onGameSynced(MultiplayerGame game) {
 
 	}
-	
+
 	@Override
 	public void finish() {
 		super.onGameClose();
 		super.finish();
 	}
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

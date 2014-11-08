@@ -8,7 +8,9 @@ import android.bluetooth.BluetoothSocket;
 public class ClientStrategy extends BaseStrategy {
 
 	private BluetoothDevice device;
+
 	private BluetoothSocket hostSocket;
+
 	private Callback<BluetoothSocket> callback;
 
 	public ClientStrategy(BluetoothDevice device,
@@ -56,9 +58,8 @@ public class ClientStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame() {
-		// TODO Auto-generated method stub
-		
+	public void commenceGame(final MultiplayerGame game) {
+
 	}
 
 }

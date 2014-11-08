@@ -4,10 +4,11 @@ import android.bluetooth.BluetoothSocket;
 
 public class MultiplayerGame {
 
-	//TODO synchronization!!!
-	//XXX
+	// TODO synchronization!!!
+	// XXX
 	// change this to list!
 	private BluetoothSocket otherPlayer;
+
 	private long syncTimestamp;
 
 	public MultiplayerGame(BluetoothSocket clientSocket) {
