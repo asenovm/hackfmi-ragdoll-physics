@@ -1,19 +1,13 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.midtownmadness.bubblecombat.Settings;
-import com.midtownmadness.bubblecombat.multiplay.commobjects.EventMessageObject;
-
-import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
@@ -30,7 +24,8 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	private Handler uiHandler = new Handler(Looper.getMainLooper());
 	protected MultiplayManager manager;
 
-	private Queue<EventMessageObject> queue = new ConcurrentLinkedQueue<EventMessageObject>();
+	private Queue<MultiplayEvent> queue = new ConcurrentLinkedQueue<MultiplayEvent>();
+
 	protected BluetoothSocket otherPlayer;
 	protected boolean stop;
 
@@ -137,16 +132,19 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 			@Override
 			public void run() {
 				while (!stop) {
-					//write one
-					if (!queue.isEmpty()){
-						sendMessage(queue.poll(), MessageType.EVENT, otherPlayer);
+					// write one
+					if (!queue.isEmpty()) {
+						sendMessage(queue.poll(), MessageType.EVENT,
+								otherPlayer);
 					}
-					
-					//read one 
+
+					// read one
 					try {
-						if (otherPlayer.getInputStream().available() > 0){
+						if (otherPlayer.getInputStream().available() > 0) {
 							BluetoothMessage message = obtainMessage(otherPlayer);
-							toast("I've received " + (message.payload != null? message.payload : "null"));
+							toast("I've received "
+									+ (message.payload != null ? message.payload
+											: "null"));
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -157,7 +155,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	}
 
 	@Override
-	public void add(EventMessageObject eventMessageObject) {
-		queue.offer(eventMessageObject);
+	public void add(MultiplayEvent event) {
+		queue.offer(event);
 	}
 }

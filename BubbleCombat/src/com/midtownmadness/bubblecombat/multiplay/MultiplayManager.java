@@ -22,7 +22,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
-import com.midtownmadness.bubblecombat.multiplay.commobjects.EventMessageObject;
 
 public class MultiplayManager implements Closeable {
 
@@ -76,19 +75,6 @@ public class MultiplayManager implements Closeable {
 
 	}
 
-	private void setupMock() {
-		handler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				strategy.add(new EventMessageObject(
-						(int) (Math.random() * 300),
-						(int) (Math.random() * 300)));
-				handler.postDelayed(this, 1000);
-			}
-		}, 1000);
-	}
-
 	protected void onDeviceDiscovered(BluetoothDevice device) {
 		// XXX this should maybe not be part of ClientStrategy?
 		// XXX move this to a List<ClientStrategy>, when you see multiple hosts
@@ -108,13 +94,8 @@ public class MultiplayManager implements Closeable {
 							}
 						}
 					}, this);
-			onStrategySet();
 			strategy.start();
 		}
-	}
-
-	private void onStrategySet() {
-		setupMock();
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {
@@ -127,6 +108,10 @@ public class MultiplayManager implements Closeable {
 		this.listeners.add(listener);
 	}
 
+	public void addEvent(final MultiplayEvent event) {
+		strategy.add(event);
+	}
+
 	public void refresh() {
 		searchForGames();
 	}
@@ -136,7 +121,6 @@ public class MultiplayManager implements Closeable {
 		BluetoothServerSocket serverSocket = adapter
 				.listenUsingInsecureRfcommWithServiceRecord(NAME, UUID);
 		this.strategy = new HostStrategy(context, serverSocket, this);
-		onStrategySet();
 		this.strategy.start();
 	}
 
