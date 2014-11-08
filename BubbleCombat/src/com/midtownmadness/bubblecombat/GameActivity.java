@@ -16,10 +16,9 @@
 
 package com.midtownmadness.bubblecombat;
 
-import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
-
-import android.app.Activity;
 import android.os.Bundle;
+
+import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 
 /**
  * This is a simple LunarLander activity that houses a single LunarView. It
