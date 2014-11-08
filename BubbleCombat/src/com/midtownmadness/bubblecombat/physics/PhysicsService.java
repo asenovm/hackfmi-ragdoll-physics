@@ -99,8 +99,7 @@ public class PhysicsService implements ContactListener {
 	}
 
 	public void applyState(Body playerBody, MultiplayEvent e) {
-		playerBody.setTransform(new Vec2(e.x, e.y), 0);
-		playerBody.setLinearVelocity(new Vec2(e.vx, e.vy));
-		applyMovement(playerBody, new Vec2(e.dx, e.dy));
+		requestQueue.add(new MovementStateRequest(playerBody, new Vec2(e.dx,
+				e.dy), new Vec2(e.x, e.y), new Vec2(e.vx, e.vy), null));
 	}
 }

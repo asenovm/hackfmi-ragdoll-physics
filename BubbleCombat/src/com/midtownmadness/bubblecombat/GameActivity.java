@@ -128,9 +128,9 @@ public class GameActivity extends BaseActivity implements
 	@Override
 	public void onMultiplayEvent(final MultiplayEvent e, final int playerId) {
 		PlayerObject playerObject = level.getPlayerObject(playerId);
+		playerObject.setHealth(e.health);
 		Body playerBody = playerObject.getBody();
 		physicsService.applyState(playerBody, e);
-		// physicsService.applyMovement(playerBody, new Vec2(e.x, e.y));
 	}
 
 	@Override
