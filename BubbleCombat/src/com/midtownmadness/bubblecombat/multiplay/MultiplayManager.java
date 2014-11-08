@@ -23,7 +23,7 @@ public class MultiplayManager {
 	public static final String SERVICE_NAME = MultiplayManager.class
 			.getSimpleName();
 	private static final String NAME = Settings.GAME_NAME;
-	private static final UUID UUID = java.util.UUID
+	static final UUID UUID = java.util.UUID
 			.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
 	private static final String TAG = MultiplayManager.class.getSimpleName();
 	private static int nextId = Settings.HOST_ID;
@@ -45,6 +45,8 @@ public class MultiplayManager {
 		}
 	};
 
+	private MultiplayStrategy strategy;
+
 	public MultiplayManager(Context context) {
 		// log by default>
 		this.listeners.add(new LoggingListener());
@@ -54,7 +56,8 @@ public class MultiplayManager {
 	}
 
 	protected void onDeviceDiscovered(BluetoothDevice device) {
-		ClientThread clientThread = new ClientThread(device,
+		// XXX this should maybe not be part of ClientStrategy?
+		ClientStrategy strategy = new ClientStrategy(device,
 				new Callback<BluetoothSocket>() {
 
 					@Override
@@ -67,7 +70,7 @@ public class MultiplayManager {
 					}
 				});
 
-		clientThread.start();
+		strategy.start();
 
 	}
 
@@ -85,8 +88,8 @@ public class MultiplayManager {
 		BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 		BluetoothServerSocket serverSocket = adapter
 				.listenUsingInsecureRfcommWithServiceRecord(NAME, UUID);
-		HostThread hostThread = new HostThread(serverSocket);
-		hostThread.start();
+		this.strategy = new HostStrategy(serverSocket, null);
+		this.strategy.start();
 	}
 
 	public void searchForGames() {
@@ -94,29 +97,7 @@ public class MultiplayManager {
 		adapter.startDiscovery();
 	}
 
-	public class HostThread extends Thread {
-		private BluetoothServerSocket serverSocket;
-
-		public HostThread(BluetoothServerSocket serverSocket) {
-			this.serverSocket = serverSocket;
-		}
-
-		@Override
-		public void run() {
-			try {
-				BluetoothSocket socket = serverSocket
-						.accept(Settings.HOST_TIMEOUT);
-				onPlayerConnected(socket);
-
-			} catch (IOException e) {
-				// timeout
-				e.printStackTrace();
-				Log.e(TAG, "Timeout when hosting!");
-			}
-		}
-	}
-
-	public void onPlayerConnected(BluetoothSocket socket) {
+	void onPlayerConnected(BluetoothSocket socket) {
 		connectPlayers.put(nextId, socket);
 
 		for (MultiplayEventListener listener : listeners) {
@@ -144,30 +125,6 @@ public class MultiplayManager {
 				e.printStackTrace();
 			}
 
-		}
-	}
-
-	private class ClientThread extends Thread {
-		private BluetoothDevice device;
-		private BluetoothSocket clientSocket;
-		private Callback<BluetoothSocket> callback;
-
-		public ClientThread(BluetoothDevice device,
-				Callback<BluetoothSocket> callback) {
-			this.device = device;
-			this.callback = callback;
-		}
-
-		@Override
-		public void run() {
-			try {
-				clientSocket = this.device
-						.createInsecureRfcommSocketToServiceRecord(UUID);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				callback.call(clientSocket);
-			}
 		}
 	}
 

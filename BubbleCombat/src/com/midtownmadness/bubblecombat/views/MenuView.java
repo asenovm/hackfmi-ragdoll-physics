@@ -2,24 +2,20 @@ package com.midtownmadness.bubblecombat.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.midtownmadness.bubblecombar.listeners.GameRoomListener;
-import com.midtownmadness.bubblecombar.model.GameModel;
 import com.midtownmadness.bubblecombar.model.GamesAdapter;
-import com.midtownmadness.bubblecombar.model.MockAdapter;
 import com.midtownmadness.bubblecombat.R;
-import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
 
-public class MenuView extends LinearLayout implements GameRoomListener {
+public class MenuView extends LinearLayout {
 
 	/**
 	 * {@value}
 	 */
+	@SuppressWarnings("unused")
 	private static final String TAG = MenuView.class.getSimpleName();
 
 	public MenuView(Context context, AttributeSet attrs, int defStyle,
@@ -36,6 +32,9 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		final View hostButton = findViewById(R.id.host_button);
 		hostButton.setOnClickListener(listener);
 
+		final View playButton = findViewById(R.id.play_button);
+		playButton.setOnClickListener(listener);
+
 		final ListView gamesListView = (ListView) findViewById(R.id.games_list);
 		final View headerView = inflater.inflate(R.layout.menu_title_view,
 				gamesListView, false);
@@ -44,7 +43,6 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		gamesListView.setEmptyView(findViewById(R.id.menu_list_empty_view));
 
 		gamesListView.setAdapter(adapter);
-		adapter.setGameRoomListener(this);
 
 	}
 
@@ -57,8 +55,4 @@ public class MenuView extends LinearLayout implements GameRoomListener {
 		this(context, null, 0, onClickListener, adapter);
 	}
 
-	@Override
-	public void onGameEntered(MultiplayerGame model) {
-		Log.i(TAG, "on game entered is called with model " + model.toString());
-	}
 }

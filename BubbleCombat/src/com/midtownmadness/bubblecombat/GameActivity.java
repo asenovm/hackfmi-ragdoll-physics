@@ -29,6 +29,7 @@ import com.midtownmadness.bubblecombat.game.LevelObject;
 import com.midtownmadness.bubblecombat.game.PlayerObject;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 
+
 public class GameActivity extends BaseActivity {
 	private GameView gameView;
 

@@ -29,7 +29,9 @@ public class MenuGameView extends LinearLayout {
 	private class TextViewClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			listener.onGameEntered(model);
+			if (listener != null) {
+				listener.onGameEntered(model);
+			}
 		}
 	}
 
@@ -37,7 +39,6 @@ public class MenuGameView extends LinearLayout {
 		super(context, attrs, defStyle);
 		LayoutInflater.from(context).inflate(R.layout.menu_game_view, this);
 		textView = (TextView) findViewById(R.id.game_view_text);
-		listener = new SimpleGameRoomListener();
 	}
 
 	public MenuGameView(Context context, AttributeSet attrs) {
@@ -55,5 +56,6 @@ public class MenuGameView extends LinearLayout {
 
 	public void setListener(final GameRoomListener listener) {
 		this.listener = listener;
+		textView.setOnClickListener(new TextViewClickListener());
 	}
 }

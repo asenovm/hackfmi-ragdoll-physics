@@ -27,6 +27,7 @@
     <string name="menu_hard">Hard</string>
     <string name="menu_host">HOST</string>
     <string name="menu_quit">QUIT</string>
+    <string name="menu_play">PLAY</string>
     <string name="menu_title">Games you can join</string>
     <string name="menu_empty_view_text">There are no games you can currently join. Please try again later.</string>
     <string name="mode_ready">Lunar Lander\nPress Up To Play</string>
