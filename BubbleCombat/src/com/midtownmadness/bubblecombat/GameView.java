@@ -16,6 +16,8 @@
 
 package com.midtownmadness.bubblecombat;
 
+import org.jbox2d.common.Vec2;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
@@ -27,6 +29,7 @@ import android.view.View.OnTouchListener;
 
 import com.midtownmadness.bubblecombat.game.DrawThread;
 import com.midtownmadness.bubblecombat.game.LevelObject;
+import com.midtownmadness.bubblecombat.physics.PhysicsService;
 
 @SuppressLint("WrongCall")
 class GameView extends SurfaceView implements SurfaceHolder.Callback,
@@ -36,15 +39,12 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	private LevelObject level;
 
 	private PointF startDragPosition = new PointF();
-	private long startDragTime;
 	private PointF endDragPosition = new PointF();
-	private long endDragTime;
-	private PointF dragVector = new PointF();
-	private long dragDeltaTime;
+	private PhysicsService physics;
 
 	private static final String TAG = GameView.class.getSimpleName();
 
-	public GameView(Context context, LevelObject level) {
+	public GameView(Context context, LevelObject level, PhysicsService physics) {
 		super(context);
 		setOnTouchListener(this);
 
@@ -53,6 +53,8 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 		this.level = level;
 
 		setFocusable(true); // make sure we get key events
+		
+		this.physics = physics;
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -60,33 +62,32 @@ class GameView extends SurfaceView implements SurfaceHolder.Callback,
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
+		physics.startService();
 		drawThread = new DrawThread(level, holder);
 		drawThread.start();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		drawThread.stop = true;
+		physics.stop();
 	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		Vec2 dragVector;
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			startDragTime = System.nanoTime();
 			startDragPosition.set(event.getRawX(), event.getRawY());
 			break;
 		case MotionEvent.ACTION_MOVE:
+			break;
 		case MotionEvent.ACTION_UP:
-			endDragTime = System.nanoTime();
 			endDragPosition.set(event.getRawX(), event.getRawY());
 
-			dragVector.set(endDragPosition.x - startDragPosition.x, endDragPosition.y - startDragPosition.y);
-			dragDeltaTime = endDragTime - startDragTime;
-			// TODO: send to physics
-
-			startDragTime = endDragTime;
-			startDragPosition.set(endDragPosition);
-			break;
+			dragVector = new Vec2((endDragPosition.x - startDragPosition.x)
+					/ level.scale.x, (endDragPosition.y - startDragPosition.y)
+					/ level.scale.y);
+			physics.applyMovement(level.getThisPlayer().getBody(), dragVector);
 		}
 		return true;
 	}

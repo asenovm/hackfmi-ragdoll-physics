@@ -10,4 +10,13 @@ public class LevelObject {
 	public PointF scale;
 	public List<GameObject> objects;
 	public Bitmap background;
+	private PlayerObject thisPlayer;
+	
+	public PlayerObject getThisPlayer() {
+		return thisPlayer;
+	}
+	
+	public void setThisPlayer(PlayerObject player) {
+		thisPlayer = player;
+	}
 }

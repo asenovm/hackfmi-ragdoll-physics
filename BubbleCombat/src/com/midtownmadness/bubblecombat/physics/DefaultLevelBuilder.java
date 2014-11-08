@@ -1,48 +1,68 @@
 package com.midtownmadness.bubblecombat.physics;
 
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.jbox2d.common.Vec2;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PointF;
+import android.graphics.RectF;
+
+import com.midtownmadness.bubblecombat.R;
+import com.midtownmadness.bubblecombat.game.GameObject;
+import com.midtownmadness.bubblecombat.game.GameWallObject;
 import com.midtownmadness.bubblecombat.game.LevelObject;
+import com.midtownmadness.bubblecombat.game.PlayerObject;
+import com.midtownmadness.bubblecombat.multiplay.Callback;
 
 public class DefaultLevelBuilder extends LevelBuilder {
 
-	public static final Vec2 BOUNDING_BOX = new Vec2(100, 120);
-
+	public Bitmap background;
+	
 	@Override
-	public LevelObject build(PhysicsService physicsService) {
-		physicsService.createBody(createWall(0, 0, 0),
-				createWallFixture(BOUNDING_BOX.x), null);
-
-		physicsService.createBody(createWall(0, BOUNDING_BOX.y, 0),
-				createWallFixture(BOUNDING_BOX.x), null);
-
-		physicsService.createBody(createWall(0, 0, -(float) (Math.PI / 2)),
-				createWallFixture(BOUNDING_BOX.y), null);
-
-		physicsService.createBody(createWall(BOUNDING_BOX.x, 0, -(float) (Math.PI / 2)),
-				createWallFixture(BOUNDING_BOX.y), null);
+	public LevelObject build(PhysicsService physicsService, Resources resources) {
+		LevelObject levelObject = new LevelObject();
 		
-		return new LevelObject();
+		// Level size
+		levelObject.size = new PointF(130, 100);
+		
+		// Walls
+		List<GameWallObject> walls = Arrays.asList(
+				new GameWallObject(new RectF(0, 0, GameWallObject.WALL_THICKNESS, levelObject.size.y)),
+				new GameWallObject(new RectF(levelObject.size.x - GameWallObject.WALL_THICKNESS, 0, levelObject.size.x, levelObject.size.y)),
+				new GameWallObject(new RectF(0, 0, levelObject.size.x, GameWallObject.WALL_THICKNESS)),
+				new GameWallObject(new RectF(0, levelObject.size.y - GameWallObject.WALL_THICKNESS, levelObject.size.x, levelObject.size.y))
+				);
+		levelObject.objects = new ArrayList<GameObject>(walls);
+		for(GameWallObject wall : walls) {
+			physicsService.createBody(wall.buildBodyDef(), wall.buildFixtureDef());
+		}
+		
+		// Player
+		Vec2 position = new Vec2(50, 50);
+		levelObject.setThisPlayer(buildPlayer(position, levelObject, physicsService));
+		
+		// Background
+		levelObject.background = BitmapFactory.decodeResource(resources, R.drawable.background);
+		
+		return levelObject;
 	}
 
-	private BodyDef createWall(float x, float y, float angle) {
-		BodyDef def = new BodyDef();
-		def.type = BodyType.STATIC;
-		def.position = new Vec2(x, y);
-		def.angle = angle;
-		return def;
-	}
-
-	private FixtureDef createWallFixture(float length) {
-		FixtureDef wallFixture;
-		wallFixture = new FixtureDef();
-		PolygonShape wallShape = new PolygonShape();
-		wallShape.setAsBox(length, 1);
-		wallFixture.shape = wallShape;
-		return wallFixture;
+	private PlayerObject buildPlayer(Vec2 position, LevelObject levelObject, PhysicsService physicsService) {
+		final PlayerObject player = new PlayerObject(position);
+		levelObject.objects.add(player);
+		physicsService.createBody(new BodyCreationRequest(player.buildBodyDef(), player.buildFixtureDef(), new Callback<BodyCreationRequest>() {
+			
+			@Override
+			public void call(BodyCreationRequest argument) {
+				player.setBody(argument.body);
+				player.getBody().setUserData(new BodyUserData(player));
+			}
+		}));
+		return player;
 	}
 }
