@@ -115,4 +115,15 @@ public class GameActivity extends BaseActivity implements
 
 	}
 
+	@Override
+	public void onGameCommence() {
+		// TODO relevant?
+	}
+
+	@Override
+	public void onError() {
+		toast(R.string.error_text);
+		finish();
+	}
+
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.graphics.Paint.Join;
 import android.util.Log;
 
 import com.midtownmadness.bubblecombat.Settings;
@@ -74,21 +75,19 @@ public class HostStrategy extends BaseStrategy {
 	}
 
 	@Override
-	public void commenceGame(final MultiplayerGame game) {
-		BluetoothMessage message = obtainMessage(otherPlayer);
+	public void commenceGame(final MultiplayerGame game,
+			MultiplayEventListener listener) {
+		while (true) {
+			BluetoothMessage message = obtainMessage(otherPlayer);
+			if (message.messageType == MessageType.COMMENCE_GAME) {
+				break;
+			}
+		}
 		toast("Player " + otherPlayer.getRemoteDevice().getName()
 				+ "has joined!");
 
-		// await GO order
-		try {
-			while (goCommandGiven == false) {
-				monitor.wait();
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
 		sendGoMessage(game);
+		listener.onGameCommence();
 	}
 
 	private void sendGoMessage(MultiplayerGame game) {

@@ -78,10 +78,6 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		startActivity(playIntent);
 	}
 
-	private void toast(String string) {
-		Toast.makeText(this, string, Toast.LENGTH_LONG).show();
-	}
-
 	@Override
 	public void onMultiplayEvent(MultiplayEvent e) {
 
@@ -133,11 +129,7 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		Toast.makeText(this, "Game connected " + model.toString(),
 				Toast.LENGTH_SHORT).show();
 
-		multiplayManager.joinGame(model);
-
-//		Intent intent = new Intent(this, GameActivity.class);
-//		startActivity(intent, null);
-//		finish();
+		multiplayManager.joinGame(model, this);
 	}
 
 	@Override
@@ -154,6 +146,25 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		finish();
+	}
+
+	@Override
+	public void onGameCommence() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				final Intent gameIntent = new Intent(getApplicationContext(),
+						GameActivity.class);
+				startActivity(gameIntent);
+				finish();
+			}
+		});
+	}
+
+	@Override
+	public void onError() {
+		toast(R.string.error_text);
 		finish();
 	}
 

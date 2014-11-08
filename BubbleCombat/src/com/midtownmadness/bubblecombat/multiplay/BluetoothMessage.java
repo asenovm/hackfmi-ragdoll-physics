@@ -1,15 +1,13 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 
 public class BluetoothMessage {
+
 	public MessageType messageType;
+
 	public Object payload;
 
 	public BluetoothMessage(MessageType messageType, Object payload) {
