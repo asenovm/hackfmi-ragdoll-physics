@@ -1,5 +1,7 @@
 package com.midtownmadness.bubblecombat;
 
+import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
+
 import java.io.IOException;
 
 import junit.framework.Assert;
@@ -150,6 +152,9 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 			public void run() {
 				final Intent gameIntent = new Intent(getApplicationContext(),
 						GameActivity.class);
+
+				final Bundle extras = new Bundle();
+				extras.putLong(EXTRA_SYNC_STAMP, syncStamp);
 				startActivity(gameIntent);
 			}
 		});

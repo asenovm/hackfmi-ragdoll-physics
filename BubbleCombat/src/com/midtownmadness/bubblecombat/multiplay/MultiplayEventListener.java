@@ -1,7 +1,5 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
-import com.midtownmadness.bubblecombat.multiplay.commobjects.GoMessageObject;
-
 public interface MultiplayEventListener {
 	void onMultiplayEvent(MultiplayEvent e);
 

@@ -1,61 +1,47 @@
 package com.midtownmadness.bubblecombat.physics;
 
-import java.util.ArrayDeque;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.joints.JointDef;
-import org.jbox2d.dynamics.joints.JointType;
 
 public class PhysicsService implements Runnable {
-	public interface Callback {
-		void callback(Body body);
-	}
-
-	private class BodyCreationRequest {
-		public BodyDef bodyDef;
-		public Callback callback;
-		public FixtureDef fixtureDef;
-	}
-
-	public static final String SERVICE_NAME = "PhysicsService";
 
 	private static final Vec2 GRAVITY = new Vec2(0, 0);
 
-	private static final int VELOCITY_ITERATIONS = 1;
+	private static final int VELOCITY_ITERATIONS = 6;
 
-	private static final int POSITION_ITERATIONS = 1;
+	private static final int POSITION_ITERATIONS = 6;
 
 	private static final long ITERATION_TIME = 16;
 
 	private Thread thread;
 	private World world;
-	private ArrayDeque<BodyCreationRequest> bodyCreationQueue = new ArrayDeque<BodyCreationRequest>();
+	private BlockingQueue<PhysicsRequest> requestQueue = new ArrayBlockingQueue<PhysicsRequest>(
+			32);
 
 	private boolean paused;
 
+	private boolean running;
+
 	public PhysicsService() {
 		thread = new Thread(this);
-		thread.start();
 	}
 
 	@Override
 	public void run() {
 		world = new World(GRAVITY);
-
-		boolean running = true;
+		
 		while (running) {
 			if (!paused) {
 				long startTime = System.currentTimeMillis();
-				while (!bodyCreationQueue.isEmpty()) {
-					BodyCreationRequest request = bodyCreationQueue.poll();
-					Body newBody = world.createBody(request.bodyDef);
-					newBody.createFixture(request.fixtureDef);
-					if (request.callback != null)
-						request.callback.callback(newBody);
+				while (!requestQueue.isEmpty()) {
+					PhysicsRequest request = requestQueue.poll();
+					request.applyRequest(world);
 				}
 				world.step(0.016666666f, VELOCITY_ITERATIONS,
 						POSITION_ITERATIONS);
@@ -72,6 +58,15 @@ public class PhysicsService implements Runnable {
 			}
 		}
 	}
+	
+	public void startService() {
+		running = true;
+		thread.start();
+	}
+
+	public void stop() {
+		running = false;
+	}
 
 	public void pause() {
 		paused = true;
@@ -81,28 +76,16 @@ public class PhysicsService implements Runnable {
 		paused = false;
 	}
 
-	public void createBody(BodyDef bodyDef, FixtureDef fixtureDef,
-			Callback callback) {
-		BodyCreationRequest entry = new BodyCreationRequest();
-		entry.bodyDef = bodyDef;
-		entry.callback = callback;
-		entry.fixtureDef = fixtureDef;
-		bodyCreationQueue.push(entry);
+	public void createBody(BodyCreationRequest request) {
+		requestQueue.add(request);
 	}
-	
-	private void createJoint(JointDef joint, Callback callback) {
-		
+
+	public void createBody(BodyDef bodyDef, FixtureDef fixtureDef) {
+		BodyCreationRequest entry = new BodyCreationRequest(bodyDef, fixtureDef);
+		requestQueue.offer(entry);
 	}
-	
-	public void createMoveAnchor(Body body) {
-		
-	}
-	
-	public void destroyMoveAnchor(Body body) {
-		
-	}
-	
-	public void applyMovement(Body body) {
-		
+
+	public void applyMovement(Body body, Vec2 movement) {
+		requestQueue.add(new MovementRequest(body, movement, null));
 	}
 }

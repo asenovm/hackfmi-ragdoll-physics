@@ -3,12 +3,12 @@ package com.midtownmadness.bubblecombat.game;
 import java.util.Random;
 
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.Shape;
-import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import com.midtownmadness.bubblecombat.physics.BodyUserData;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,12 +20,14 @@ public class PlayerObject extends GameObject {
 	protected Paint paint;
 	
 	protected int health;
+	private Vec2 initialPosition;
 	
-	public PlayerObject()
+	public PlayerObject(Vec2 initialPosition)
 	{
 		paint = new Paint();
 		paint.setStyle(Paint.Style.FILL);
 		paint.setColor(getRandomColor());
+		this.initialPosition = initialPosition;
 	}
 	
 	private int getRandomColor()
@@ -40,11 +42,9 @@ public class PlayerObject extends GameObject {
 	
 	@Override
 	public void render(Canvas canvas) {
-		super.render(canvas);
-		
-		//if (body != null)
+		if (body != null)
 		{
-			Vec2 position = new Vec2(50, 50); //body.getPosition();
+			Vec2 position = body.getPosition();
 			canvas.drawCircle(position.x, position.y, radius, paint);
 		}
 	}
@@ -57,6 +57,7 @@ public class PlayerObject extends GameObject {
 		def.shape = shape;
 		def.friction = 0.2f;
 		def.restitution = 0.7f;
+		def.density = 0.01f;
 		
 		return def;
 	}
@@ -64,6 +65,8 @@ public class PlayerObject extends GameObject {
 	@Override
 	public BodyDef buildBodyDef() {
 		BodyDef def = new BodyDef();
+		def.position = initialPosition;
+		def.type = BodyType.DYNAMIC;
 		return def;
 	}
 }

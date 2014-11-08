@@ -16,21 +16,24 @@
 
 package com.midtownmadness.bubblecombat;
 
-import static com.midtownmadness.bubblecombat.Settings.EXTRA_SYNC_STAMP;
-import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Display;
 
 import com.midtownmadness.bubblecombat.game.LevelObject;
+<<<<<<< HEAD
+import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
+import com.midtownmadness.bubblecombat.physics.DefaultLevelBuilder;
+import com.midtownmadness.bubblecombat.physics.LevelBuilder;
+import com.midtownmadness.bubblecombat.physics.PhysicsService;
+=======
+import com.midtownmadness.bubblecombat.game.PlayerObject;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEventListener;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayManager;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayerGame;
-import com.midtownmadness.bubblecombat.physics.DefaultLevelBuilder;
-import com.midtownmadness.bubblecombat.physics.LevelBuilder;
-import com.midtownmadness.bubblecombat.physics.PhysicsService;
+>>>>>>> ab58cab98842f46f6e0a10ac8076f87b51bb178c
 
 public class GameActivity extends BaseActivity implements
 		MultiplayEventListener {
@@ -41,21 +44,31 @@ public class GameActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final Intent intent = getIntent();
-		final long syncStamp = intent.getLongExtra(EXTRA_SYNC_STAMP, -1);
-
-		toast(String.format("sync stamp is %s", syncStamp));
-
-		// Multiplayer reference example
+<<<<<<< HEAD
+		//Multiplayer reference example
 		MultiplayManager manager = (MultiplayManager) getSystemService(MultiplayManager.SERVICE_NAME);
-		if (manager == null) {
+		if (manager == null){
 			throw new RuntimeException();
 		}
-
+		
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
 		physicsService = new PhysicsService();
 		LevelObject level = lbuilder.build(physicsService, getResources());
+		
+=======
+		// Multiplayer reference example
+		MultiplayManager multiplayManager = (MultiplayManager) getSystemService(MultiplayManager.SERVICE_NAME);
+		multiplayManager.addListener(this);
 
+		// LevelBuilder lbuilder = new DefaultLevelBuilder();
+		// LevelObject level = lbuilder.build(null);
+
+		LevelObject level = new LevelObject();
+		level.objects = new ArrayList<GameObject>();
+		level.objects.add(new PlayerObject());
+		level.size = new PointF(130, 100);
+
+>>>>>>> ab58cab98842f46f6e0a10ac8076f87b51bb178c
 		// get screen size
 		Display display = getWindowManager().getDefaultDisplay();
 		Point screenSize = new Point();
@@ -63,9 +76,31 @@ public class GameActivity extends BaseActivity implements
 
 		level.scale = new PointF();
 		level.scale.x = level.scale.y = screenSize.y / level.size.y;
-
+<<<<<<< HEAD
+		
 		gameView = new GameView(this, level, physicsService);
+=======
+
+		level.background = BitmapFactory.decodeResource(getResources(),
+				R.drawable.background);
+
+		gameView = new GameView(this, level);
+>>>>>>> ab58cab98842f46f6e0a10ac8076f87b51bb178c
 		setContentView(gameView);
+
+		load();
+
+	}
+
+	private Object load() {
+		try {
+			Thread.sleep(100);
+			return new Object();
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -103,7 +138,7 @@ public class GameActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onGameCommenced(final long syncStamp) {
+	public void onGameCommence() {
 		// TODO relevant?
 	}
 
