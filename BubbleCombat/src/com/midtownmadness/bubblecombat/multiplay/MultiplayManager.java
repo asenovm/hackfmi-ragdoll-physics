@@ -178,6 +178,7 @@ public class MultiplayManager implements Closeable {
 		return getPlayerIds().get(0);
 	}
 
+
 //	public void sendGoMessage(int... playerIds) {
 //		Object payload = null;
 //		for (int playerId : playerIds) {

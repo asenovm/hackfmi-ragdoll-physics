@@ -66,22 +66,20 @@ public class GameActivity extends BaseActivity implements
 		gameView = new GameView(this, level);
 		setContentView(gameView);
 
-		
-//		load();
-		int connectedPlayerId = multiplayManager.getPlayerId();
-//		multiplayManager.sendGoMessage(connectedPlayerId);
-		
+		load();
+
 	}
 
-//	private Object load() {
-//		try {
-//			Thread.sleep(100);
-//			return new Object();
-//
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	private Object load() {
+		try {
+			Thread.sleep(100);
+			return new Object();
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Invoked when the Activity loses user focus.

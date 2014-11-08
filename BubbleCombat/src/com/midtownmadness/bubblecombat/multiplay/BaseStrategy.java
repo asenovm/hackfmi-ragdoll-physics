@@ -15,7 +15,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	 */
 	private static final String TAG = BaseStrategy.class.getSimpleName();
 
-	protected Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
+	private Map<Integer, BluetoothSocket> connectPlayers = new HashMap<Integer, BluetoothSocket>();
 
 	private LooperThread looper;
 
@@ -35,20 +35,20 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	}
 
 	protected void sendMessage(Object payload, MessageType type,
-			int... playerIds) {
+			BluetoothSocket... players) {
 		byte[] message = BluetoothMessage.from(type, payload);
 
-		for (int playerId : playerIds) {
-			BluetoothSocket connectedPlayer = connectPlayers.get(playerId);
-			if (connectedPlayer == null) {
+		for (BluetoothSocket playerSocket : players) {
+			if (players == null) {
 				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
-						+ playerId + " => NOT PRESENT IN MULTIPLAY MANAGER!");
+						+ playerSocket
+						+ " => NOT PRESENT IN MULTIPLAY MANAGER!");
 				continue;
 			}
 
 			try {
-				connectedPlayer.getOutputStream().write(message);
-				connectedPlayer.getOutputStream().flush();
+				playerSocket.getOutputStream().write(message);
+				playerSocket.getOutputStream().flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -56,8 +56,9 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 		}
 	}
 
-	protected void sendEmptyMessage(MessageType type, int... playerIds) {
-		sendMessage(new String(), type, playerIds);
+	protected void sendEmptyMessage(MessageType type,
+			BluetoothSocket... sockets) {
+		sendMessage(new String(), type, sockets);
 	}
 
 	@Override
