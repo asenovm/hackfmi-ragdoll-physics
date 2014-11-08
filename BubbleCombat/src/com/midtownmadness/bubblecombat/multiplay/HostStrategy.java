@@ -33,6 +33,7 @@ public class HostStrategy extends BaseStrategy {
 
 					// please don't do ugly stuff with my 'otherPlayer' field
 					manager.onPlayerConnected(otherPlayer);
+					
 
 				} catch (IOException e) {
 					// timeout

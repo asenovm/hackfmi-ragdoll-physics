@@ -1,6 +1,8 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,17 +38,18 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 
 	protected void sendMessage(Object payload, MessageType type,
 			BluetoothSocket... players) {
-		byte[] message = BluetoothMessage.from(type, payload);
+		BluetoothMessage message = new BluetoothMessage(type, payload);
 
 		for (BluetoothSocket playerSocket : players) {
 			if (players == null) {
 				Log.d(TAG, "ERROR!: ATTEMPTED TO FIND PLAYER WITH id "
-						+ playerSocket + " => NOT PRESENT IN MULTIPLAY MANAGER!");
+						+ playerSocket
+						+ " => NOT PRESENT IN MULTIPLAY MANAGER!");
 				continue;
 			}
 
 			try {
-				playerSocket.getOutputStream().write(message);
+				playerSocket.getOutputStream().write(message.toBytes());
 				playerSocket.getOutputStream().flush();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -55,7 +58,8 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 		}
 	}
 
-	protected void sendEmptyMessage(MessageType type, BluetoothSocket... sockets) {
+	protected void sendEmptyMessage(MessageType type,
+			BluetoothSocket... sockets) {
 		sendMessage(new String(), type, sockets);
 	}
 
@@ -77,4 +81,25 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	}
 
 	public abstract void onLooperReady();
+
+	protected BluetoothMessage obtainMessage(BluetoothSocket otherPlayer2) {
+		BluetoothMessage message = new BluetoothMessage(MessageType.ERROR, null);
+		try {
+			ObjectInputStream inputStream = new ObjectInputStream(
+					otherPlayer2.getInputStream());
+			int messageTypeOrdinal = inputStream.readInt();
+			MessageType type = MessageType.getByOrdinal(messageTypeOrdinal);
+			Object payload = inputStream.readObject();
+			message = new BluetoothMessage(type, payload);
+		} catch (StreamCorruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			return message;
+		}
+
+	}
 }
