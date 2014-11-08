@@ -2,13 +2,14 @@ package com.midtownmadness.bubblecombat.multiplay;
 
 import java.io.IOException;
 
-import com.midtownmadness.bubblecombat.Settings;
-
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.midtownmadness.bubblecombat.Settings;
+
 public class HostStrategy extends BaseStrategy {
+
 	protected static final String TAG = HostStrategy.class.getSimpleName();
 	private BluetoothServerSocket serverSocket;
 	private MultiplayManager manager;

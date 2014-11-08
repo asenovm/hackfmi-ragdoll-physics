@@ -4,7 +4,6 @@ import java.util.Map;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
-import android.util.SparseArray;
 
 public interface MultiplayStrategy {
 	void handshakeAndLoad();
@@ -18,6 +17,6 @@ public interface MultiplayStrategy {
 	void onPlayerConnected(final int playerId, final BluetoothSocket socket);
 
 	void close();
-	
+
 	public Map<Integer, BluetoothSocket> getConnectedPlayers();
 }

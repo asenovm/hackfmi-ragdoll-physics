@@ -1,5 +1,5 @@
 package com.midtownmadness.bubblecombat.multiplay;
 
 public enum MessageType {
-	GO, HANDSHAKE, DEFAULT, ERROR
+	EVENT, HANDSHAKE, COMMENCE_GAME, GO, DEFAULT, ERROR
 }

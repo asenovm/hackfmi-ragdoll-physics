@@ -59,7 +59,7 @@ public class ClientStrategy extends BaseStrategy {
 
 	@Override
 	public void commenceGame(final MultiplayerGame game) {
-
+		sendEmptyMessage(MessageType.COMMENCE_GAME);
 	}
 
 }
