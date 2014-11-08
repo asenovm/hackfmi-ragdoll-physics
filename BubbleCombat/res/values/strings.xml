@@ -17,7 +17,7 @@
 
 <resources>
 
-    <string name="app_name">Lunar Lander</string>
+    <string name="app_name">Bubble Combat!</string>
     <string name="menu_start">Start</string>
     <string name="menu_stop">Stop</string>
     <string name="menu_pause">Pause</string>

@@ -15,7 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 public class PlayerObject extends GameObject {
-	private static final int radius = 10;
+	private static final int radius = 5;
 	private static final Random rand = new Random();
 	protected Paint paint;
 	
@@ -42,9 +42,9 @@ public class PlayerObject extends GameObject {
 	public void render(Canvas canvas) {
 		super.render(canvas);
 		
-		if (body != null)
+		//if (body != null)
 		{
-			Vec2 position = body.getPosition();
+			Vec2 position = new Vec2(50, 50); //body.getPosition();
 			canvas.drawCircle(position.x, position.y, radius, paint);
 		}
 	}
