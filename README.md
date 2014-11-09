@@ -17,8 +17,14 @@ Once the game is started each player starts listening for events coming from the
 ##Game (gameplay details)
 After the game is started, the level is loaded along with the bubbles of the 2+ players. In the middle of the level there is a spinning obstacle which lowers the health of the bubbles when hit, but also changes the direction of their movement along with their speed. When the bubbles of the players collide, both players lose health with the one who had bigger acceleration losing more. When the health of one of the players reaches 0 the game ends with the player with 0 health losing it and the others being winners.
 
-![GamePlay1]("https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_1.png")
+![GamePlay1]("https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_1.png", "game_play_1")
 
-![GamePlay2]("https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_2.png")
+![GamePlay2]("https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_2.png", "game_play_2")
 
 ##Technical details
+
+###Physics
+BubbleCombat uses a Java port of the popular Box2D physics engine. The engine handles force application and collision detection. Each gesture input is converted to a force vector which is then applied to the player's bubble on the next time step. Since players are very fast-moving objects, the so-called tunneling effect can sometimes be observed (for instance, a very fast moving player could "tunnel" through a wall). To handle this, all objects' dimensions are up-scaled, imposing a lower cap on their apparent speed, but also making collision detection easier for the engine and therefore more robust.
+
+### Client synchronization
+After converting a user gesture to a force vector, the player's state (i.e. position, linear velocity, force due to the input, health) is saved and sent to other peers. Each receiving player then locally restores the incoming state for the corresponding player's bubble and continues the physics simulation locally. Due to the network latency, however, this alone is not enough to ensure synchronization between the peers' local simulations. That is why the player's state is also sent several times per second, which ensures eventual consistency between simulations.
