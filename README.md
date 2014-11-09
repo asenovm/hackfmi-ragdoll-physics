@@ -22,3 +22,9 @@ After the game is started, the level is loaded along with the bubbles of the 2+ 
 ![GamePlay2]("https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_2.png")
 
 ##Technical details
+
+###Physics
+BubbleCombat uses a Java port of the popular Box2D physics engine. The engine handles force application and collision detection. Each gesture input is converted to a force vector which is then applied to the player's bubble on the next time step. Since players are very fast-moving objects, the so-called tunneling effect can sometimes be observed (for instance, a very fast moving player could "tunnel" through a wall). To handle this, all objects' dimensions are up-scaled, imposing a lower cap on their apparent speed, but also making collision detection easier for the engine and therefore more robust.
+
+### Client synchronization
+After converting a user gesture to a force vector, the player's state (i.e. position, linear velocity, force due to the input, health) is saved and sent to other peers. Each receiving player then locally restores the incoming state for the corresponding player's bubble and continues the physics simulation locally. Due to the network latency, however, this alone is not enough to ensure synchronization between the peers' local simulations. That is why the player's state is also sent several times per second, which ensures eventual consistency between simulations.
