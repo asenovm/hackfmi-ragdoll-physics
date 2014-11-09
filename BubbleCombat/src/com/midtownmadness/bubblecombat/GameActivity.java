@@ -50,21 +50,35 @@ public class GameActivity extends BaseActivity implements
 		MultiplayEventListener, CollisionListener {
 
 	private static final float MAX_VELOCITY = 400f;
+
 	private static final float MAX_DMG_ON_COLLISION = 5;
 
 	private GameView gameView;
+
 	private PhysicsService physicsService;
+
 	private LevelObject level;
+
 	private long syncStamp;
 
+	private boolean isGameEnded;
+
 	private class GameResultRunnable implements Runnable {
+
+		private final boolean isWinner;
+
+		public GameResultRunnable(final boolean isWinner) {
+			this.isWinner = isWinner;
+		}
+
 		@Override
 		public void run() {
 			final AlertDialog.Builder builder = new AlertDialog.Builder(
 					GameActivity.this);
 
 			builder.setTitle(R.string.game_over)
-					.setMessage(R.string.game_result)
+					.setMessage(
+							isWinner ? R.string.game_win : R.string.game_lose)
 					.setCancelable(false)
 					.setPositiveButton(R.string.back_to_menu,
 							new QuitOnClickListener()).create().show();
@@ -135,6 +149,9 @@ public class GameActivity extends BaseActivity implements
 		playerObject.setHealth(e.health);
 		Body playerBody = playerObject.getBody();
 		physicsService.applyState(playerBody, e);
+		if (e.health == 0) {
+			endGame(playerId);
+		}
 	}
 
 	@Override
@@ -174,13 +191,17 @@ public class GameActivity extends BaseActivity implements
 			float dmg = (velocity / MAX_VELOCITY) * MAX_DMG_ON_COLLISION;
 			thisPlayer.takeDamage(dmg);
 			if (thisPlayer.getHealth() == 0) {
-				endGame();
+				endGame(thisPlayer.getPlayerId());
 			}
 		}
 	}
 
-	private void endGame() {
-		runOnUiThread(new GameResultRunnable());
+	private void endGame(final int loserId) {
+		if (!isGameEnded) {
+			isGameEnded = true;
+			final int currentPlayerId = level.getThisPlayer().getPlayerId();
+			runOnUiThread(new GameResultRunnable(currentPlayerId != loserId));
+		}
 	}
 
 	private void playCollisionSound() {

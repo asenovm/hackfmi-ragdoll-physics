@@ -82,19 +82,21 @@ public class MultiplayManager implements Closeable {
 		// game - the first one
 		// TODO generalize
 		if (strategy == null) {
-			this.strategy = new ClientStrategy(context, device,
-					new Callback<BluetoothSocket>() {
+			if (device.getName().equals("Nexus 5")) {
+				this.strategy = new ClientStrategy(context, device,
+						new Callback<BluetoothSocket>() {
 
-						@Override
-						public void call(BluetoothSocket argument) {
-							if (argument == null) {
-								Log.e(TAG, "Socket receive failure");
-							} else {
-								onGameDiscovered(argument);
+							@Override
+							public void call(BluetoothSocket argument) {
+								if (argument == null) {
+									Log.e(TAG, "Socket receive failure");
+								} else {
+									onGameDiscovered(argument);
+								}
 							}
-						}
-					}, this);
-			strategy.start();
+						}, this);
+				strategy.start();
+			}
 		}
 	}
 
