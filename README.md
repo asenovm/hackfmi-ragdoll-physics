@@ -7,7 +7,7 @@ A multiplayer **Android** combat game where 2+ **bubbles** (players) can fight w
 ![GamePlay1](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_1.png "game_play_1")
 
 ##Gameplay video
-![Gameplay video](https://www.youtube.com/watch?v=IlEkN08ruNY)
+[Gameplay video](https://www.youtube.com/watch?v=IlEkN08ruNY)
 
 ##Game Lobby
 The first screen the user sees upon opening **BubbleCombat** is the game lobby where all the currently active games are listed. The user can join each one of them upon selecting the respective item. In case no games are listed, the user can either refresh the game room (make a new search for active games), or conversely, create a game of his own that others can join by clicking the **HOST** button. Each hosted game can be joined for a time window of **120 seconds**.
