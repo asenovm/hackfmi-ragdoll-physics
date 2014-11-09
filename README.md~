@@ -20,7 +20,6 @@ Once the game is started each player starts listening for events coming from the
 After the game is started, the level is loaded along with the bubbles of the 2+ players. In the middle of the level there is a spinning obstacle which lowers the health of the bubbles when hit, but also changes the direction of their movement along with their speed. When the bubbles of the players collide, both players lose health with the one who had bigger acceleration losing more. When the health of one of the players reaches 0 the game ends with the player with 0 health losing it and the others being winners.
 
 ![GamePlay2](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_2.png "game_play_2")
-
 ##Technical details
 
 ###Physics
