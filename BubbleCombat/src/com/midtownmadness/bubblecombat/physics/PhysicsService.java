@@ -26,7 +26,7 @@ public class PhysicsService implements ContactListener {
 
 	private World world;
 	private BlockingQueue<PhysicsRequest> requestQueue = new ArrayBlockingQueue<PhysicsRequest>(
-			32);
+			128);
 
 	private CollisionListener collisionListener;
 
@@ -72,7 +72,7 @@ public class PhysicsService implements ContactListener {
 
 		dispatchCollision(gameObj1, gameObj2, contact);
 	}
-	
+
 	public void setCollisionListener(CollisionListener listener) {
 		collisionListener = listener;
 	}
