@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.view.Display;
 
 import com.midtownmadness.bubblecombat.game.GameObject;
+import com.midtownmadness.bubblecombat.game.GameWallObject;
 import com.midtownmadness.bubblecombat.game.LevelObject;
 import com.midtownmadness.bubblecombat.game.PlayerObject;
 import com.midtownmadness.bubblecombat.multiplay.MultiplayEvent;
@@ -95,6 +96,8 @@ public class GameActivity extends BaseActivity implements
 		manager.addListener(this);
 
 		List<Integer> players = manager.getPlayerIds();
+//		ArrayList<Integer> players = new ArrayList<Integer>();
+//		players.add(0, 0);
 		players.add(0, manager.getMyPlayerId());
 		LevelBuilder lbuilder = new DefaultLevelBuilder();
 		physicsService = new PhysicsService();
@@ -170,11 +173,13 @@ public class GameActivity extends BaseActivity implements
 
 		PlayerObject thisPlayer = level.getThisPlayer();
 		if (gameObj1 == thisPlayer || gameObj2 == thisPlayer) {
-			float velocity = thisPlayer.getBody().getLinearVelocity().length();
-			float dmg = (velocity / MAX_VELOCITY) * MAX_DMG_ON_COLLISION;
-			thisPlayer.takeDamage(dmg);
-			if (thisPlayer.getHealth() == 0) {
-				endGame();
+			if(!(gameObj1 instanceof GameWallObject) && !(gameObj2 instanceof GameWallObject)) {
+				float velocity = thisPlayer.getBody().getLinearVelocity().length();
+				float dmg = (velocity / MAX_VELOCITY) * MAX_DMG_ON_COLLISION;
+				thisPlayer.takeDamage(dmg);
+				if (thisPlayer.getHealth() == 0) {
+					endGame();
+				}
 			}
 		}
 	}
