@@ -188,6 +188,10 @@ public class MultiplayManager implements Closeable {
 			listener.onMultiplayEvent(event, getOtherPlayerId());
 		}
 	}
+	
+	public void endGame(){
+		strategy.endGame();
+	}
 
 	public void action() {
 		strategy.action();

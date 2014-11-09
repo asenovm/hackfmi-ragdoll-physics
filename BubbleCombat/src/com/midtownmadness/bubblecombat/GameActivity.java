@@ -24,6 +24,7 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -33,6 +34,8 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import com.midtownmadness.bubblecombat.game.GameObject;
 import com.midtownmadness.bubblecombat.game.LevelObject;
@@ -76,12 +79,15 @@ public class GameActivity extends BaseActivity implements
 			final AlertDialog.Builder builder = new AlertDialog.Builder(
 					GameActivity.this);
 
-			builder.setTitle(R.string.game_over)
+			final Dialog dialog = builder
+					.setTitle(R.string.game_over)
 					.setMessage(
 							isWinner ? R.string.game_win : R.string.game_lose)
 					.setCancelable(false)
 					.setPositiveButton(R.string.back_to_menu,
-							new QuitOnClickListener()).create().show();
+							new QuitOnClickListener()).create();
+
+			dialog.show();
 		}
 	}
 

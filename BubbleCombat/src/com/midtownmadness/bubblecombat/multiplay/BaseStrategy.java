@@ -27,7 +27,7 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 	private Queue<MultiplayEvent> queue = new ConcurrentLinkedQueue<MultiplayEvent>();
 
 	protected BluetoothSocket otherPlayer;
-	protected boolean stop;
+	protected volatile boolean stop;
 
 	public BaseStrategy(Context context, MultiplayManager manager) {
 		this.context = context;
@@ -150,6 +150,10 @@ public abstract class BaseStrategy implements MultiplayStrategy {
 				}
 			}
 		});
+	}
+	
+	public void endGame(){
+		stop = true;
 	}
 
 	@Override

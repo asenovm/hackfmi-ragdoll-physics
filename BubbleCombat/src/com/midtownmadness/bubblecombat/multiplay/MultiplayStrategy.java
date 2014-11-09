@@ -22,6 +22,8 @@ public interface MultiplayStrategy {
 
 	void action();
 
+	void endGame();
+
 	void add(MultiplayEvent event);
 
 }
