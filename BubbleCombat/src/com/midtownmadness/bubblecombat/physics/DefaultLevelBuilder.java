@@ -24,7 +24,7 @@ public class DefaultLevelBuilder extends LevelBuilder {
 	private static final int[] PLAYER_BITMAPS = new int[] {
 			R.drawable.character1, R.drawable.character2, R.drawable.character3 };
 
-	private static final int STARTING_X = 55;
+	private static final float STARTING_X = 55;
 	private static final float STARTING_Y = 50;
 	public Bitmap background;
 
