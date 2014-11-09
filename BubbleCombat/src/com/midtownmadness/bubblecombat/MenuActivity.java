@@ -52,9 +52,6 @@ public class MenuActivity extends BaseActivity implements OnClickListener,
 		case R.id.quit_button:
 			finish();
 			break;
-		case R.id.play_button:
-			play();
-			break;
 		case R.id.refresh_button:
 			refresh();
 			break;

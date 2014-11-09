@@ -21,12 +21,6 @@
             android:text="@string/menu_host" />
 
         <Button
-            android:id="@+id/play_button"
-            style="@style/menu_button_style"
-            android:layout_centerVertical="true"
-            android:text="@string/menu_play" />
-
-        <Button
             android:id="@+id/quit_button"
             style="@style/menu_button_style"
             android:layout_alignParentBottom="true"

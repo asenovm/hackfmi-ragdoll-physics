@@ -32,9 +32,6 @@ public class MenuView extends LinearLayout {
 		final View hostButton = findViewById(R.id.host_button);
 		hostButton.setOnClickListener(listener);
 
-		final View playButton = findViewById(R.id.play_button);
-		playButton.setOnClickListener(listener);
-
 		final View refreshButton = findViewById(R.id.refresh_button);
 		refreshButton.setOnClickListener(listener);
 
