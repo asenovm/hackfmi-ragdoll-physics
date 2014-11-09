@@ -24,7 +24,7 @@ public class DefaultLevelBuilder extends LevelBuilder {
 	private static final int[] PLAYER_BITMAPS = new int[] {
 			R.drawable.character1, R.drawable.character2, R.drawable.character3 };
 
-	private static final int STARTING_X = 50;
+	private static final float STARTING_X = 55;
 	private static final float STARTING_Y = 50;
 	public Bitmap background;
 
@@ -68,6 +68,24 @@ public class DefaultLevelBuilder extends LevelBuilder {
 		for (int i = 1; i < players.size(); i++) {
 			buildPlayer(levelObject, physicsService,
 					players.get(i), resources);
+		}
+		
+		// Level objects
+		Bitmap swordBitmap = BitmapFactory.decodeResource(resources,
+				R.drawable.sword);
+		for (int i = 0; i < 4; i++) {
+			final CentralHurdle centralHurdle = new CentralHurdle(
+					levelObject.size.x / 2, levelObject.size.y / 2,
+					(float) (Math.PI * ((float)i / 2)), swordBitmap);
+			levelObject.objects.add(centralHurdle);
+			physicsService.createBody(new BodyCreationRequest(centralHurdle.buildBodyDef(), centralHurdle.buildFixtureDef(), new Callback<BodyCreationRequest>() {
+				
+				@Override
+				public void call(BodyCreationRequest argument) {
+					centralHurdle.setBody(argument.body);
+					argument.body.setUserData(new BodyUserData(centralHurdle));
+				}
+			}));
 		}
 
 		// Background
