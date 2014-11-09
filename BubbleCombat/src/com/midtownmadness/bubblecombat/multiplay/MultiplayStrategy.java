@@ -21,7 +21,7 @@ public interface MultiplayStrategy {
 	public Map<Integer, BluetoothSocket> getConnectedPlayers();
 
 	void action();
-
+	
 	void endGame();
 
 	void add(MultiplayEvent event);

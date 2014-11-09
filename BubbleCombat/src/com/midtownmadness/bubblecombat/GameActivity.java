@@ -75,6 +75,8 @@ public class GameActivity extends BaseActivity implements
 
 		@Override
 		public void run() {
+			gameView.stopProcessing();
+
 			final AlertDialog.Builder builder = new AlertDialog.Builder(
 					GameActivity.this);
 
@@ -134,20 +136,6 @@ public class GameActivity extends BaseActivity implements
 		setContentView(gameView);
 
 		manager.action();
-	}
-
-	/**
-	 * Invoked when the Activity loses user focus.
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onGameClose();
-		finish();
 	}
 
 	@Override

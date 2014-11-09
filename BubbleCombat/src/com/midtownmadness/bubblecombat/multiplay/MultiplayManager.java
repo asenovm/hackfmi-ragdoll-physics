@@ -189,10 +189,10 @@ public class MultiplayManager implements Closeable {
 		}
 	}
 	
-	public void endGame(){
+	public void endGame() {
 		strategy.endGame();
 	}
-
+	
 	public void action() {
 		strategy.action();
 	}
