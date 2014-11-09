@@ -4,6 +4,8 @@ Bubble Combat
 ##Overview
 A multiplayer **Android** combat game where 2+ **bubbles** (players) can fight with each other using touch gestures. Depending on the force and direction applied in the gesture the bubbles will accelerate and inflict damage on each other thus lowering their health. The one who has higher speed will cause more damage on its enemy in case of collision, but will also lower its own health if it misses the oponent and hits some of the special objects (obstacles) on the level.
 
+![GamePlay1](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_1.png "game_play_1")
+
 ##Game Lobby
 The first screen the user sees upon opening **BubbleCombat** is the game lobby where all the currently active games are listed. The user can join each one of them upon selecting the respective item. In case no games are listed, the user can either refresh the game room (make a new search for active games), or conversely, create a game of his own that others can join by clicking the **HOST** button. Each hosted game can be joined for a time window of **120 seconds**.
 ![GameLobby](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_lobby.png "game_lobby")
@@ -16,8 +18,6 @@ Once the game is started each player starts listening for events coming from the
 
 ##Game (gameplay details)
 After the game is started, the level is loaded along with the bubbles of the 2+ players. In the middle of the level there is a spinning obstacle which lowers the health of the bubbles when hit, but also changes the direction of their movement along with their speed. When the bubbles of the players collide, both players lose health with the one who had bigger acceleration losing more. When the health of one of the players reaches 0 the game ends with the player with 0 health losing it and the others being winners.
-
-![GamePlay1](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_1.png "game_play_1")
 
 ![GamePlay2](https://raw.githubusercontent.com/asenovm/hackfmi-ragdoll-physics/master/Screeshots/game_play_2.png "game_play_2")
 
