@@ -19,7 +19,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.ParcelUuid;
+import android.os.Parcelable;
 import android.util.Log;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.midtownmadness.bubblecombat.Settings;
 
@@ -81,23 +85,32 @@ public class MultiplayManager implements Closeable {
 		// XXX this for the moment allows us to see no more than one bluetooth
 		// game - the first one
 		// TODO generalize
-		if (strategy == null) {
-			if (device.getName().equals("Nexus 5")) {
-				this.strategy = new ClientStrategy(context, device,
-						new Callback<BluetoothSocket>() {
 
-							@Override
-							public void call(BluetoothSocket argument) {
-								if (argument == null) {
-									Log.e(TAG, "Socket receive failure");
-								} else {
-									onGameDiscovered(argument);
-								}
+		if (strategy == null && matchesUUID(device)) {
+			this.strategy = new ClientStrategy(context, device,
+					new Callback<BluetoothSocket>() {
+
+						@Override
+						public void call(BluetoothSocket argument) {
+							if (argument == null) {
+								Log.e(TAG, "Socket receive failure");
+							} else {
+								onGameDiscovered(argument);
 							}
-						}, this);
-				strategy.start();
-			}
+						}
+					}, this);
+			strategy.start();
 		}
+	}
+
+	private boolean matchesUUID(BluetoothDevice device) {
+//		for (ParcelUuid uuid : device.getUuids()) {
+//			if (uuid.getUuid().equals(UUID)) {
+//				return true;
+//			}
+//		}
+		//XXX
+		return true;
 	}
 
 	private void onGameDiscovered(BluetoothSocket clientSocket) {
@@ -112,10 +125,6 @@ public class MultiplayManager implements Closeable {
 
 	public void addEvent(final MultiplayEvent event) {
 		strategy.add(event);
-	}
-
-	public void refresh() {
-		searchForGames();
 	}
 
 	public void host() throws IOException {
@@ -188,11 +197,11 @@ public class MultiplayManager implements Closeable {
 			listener.onMultiplayEvent(event, getOtherPlayerId());
 		}
 	}
-	
+
 	public void endGame() {
 		strategy.endGame();
 	}
-	
+
 	public void action() {
 		strategy.action();
 	}
